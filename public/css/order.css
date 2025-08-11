@@ -1,0 +1,314 @@
+/* =================================
+   Pagina Ordine (order.css) - Layout Verticale
+==================================== */
+
+.order-page-vertical-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.selection-section {
+    margin-bottom: 80px;
+}
+
+.selection-section h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.day-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.day-selector-btn {
+    padding: 12px 30px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #333;
+}
+
+.day-selector-btn:hover {
+    background-color: #e9ecef;
+}
+
+.day-selector-btn.active {
+    background-color: #343a40;
+    color: white;
+    border-color: #343a40;
+}
+
+.time-slots {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.time-slot-btn {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.time-slot-btn:hover {
+    background-color: #e9ecef;
+    border-color: #aaa;
+}
+
+.time-slot-btn.active {
+    background-color: #343a40;
+    color: white;
+    border-color: #343a40;
+}
+
+.time-slot-btn.disabled {
+    background-color: #f8f9fa;
+    color: #ccc;
+    cursor: not-allowed;
+    border-color: #e9ecef;
+}
+
+.order-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.option-card {
+    position: relative;
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: #333;
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.option-card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.option-card:hover img {
+    transform: scale(1.05);
+}
+
+.card-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: white;
+    box-sizing: border-box;
+}
+
+.card-text h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    margin: 0 0 5px 0;
+}
+
+.card-text p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.dark-card .card-text {
+    background: linear-gradient(to top, rgba(255, 193, 7, 0.8), transparent);
+    color: #343a40;
+}
+
+.products-scroller {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px 5px;
+    scrollbar-width: thin;
+    scrollbar-color: #ffc107 #555;
+}
+
+.products-scroller::-webkit-scrollbar {
+    height: 8px;
+}
+
+.products-scroller::-webkit-scrollbar-track {
+    background: #555;
+}
+
+.products-scroller::-webkit-scrollbar-thumb {
+    background-color: #ffc107;
+    border-radius: 10px;
+}
+
+.product-card {
+    flex: 0 0 250px;
+    background-color: white;
+    color: #333;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 15px;
+    text-align: left;
+}
+
+.product-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
+    margin: 0 0 5px 0;
+}
+
+.product-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.summary-card {
+    background-color: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.order-items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    min-height: 100px;
+}
+
+.empty-cart-message {
+    color: #888;
+    text-align: center;
+    padding-top: 30px;
+}
+
+.order-items-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.item-name {
+    font-weight: bold;
+}
+
+.item-price {
+    color: #555;
+}
+
+.summary-footer {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #343a40;
+}
+
+.summary-footer .summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.summary-footer .summary-line span:first-child {
+    font-weight: bold;
+}
+
+.total-price {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.total-price span:first-child {
+    font-weight: bold;
+}
+
+.total-price span:last-child {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.3rem;
+}
+
+.btn-checkout {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-checkout:hover {
+    background-color: #218838;
+}
+
+.btn-checkout:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.cta-banner {
+    background-color: #343a40;
+    color: white;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.cta-banner h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+}
+
+.cta-banner p {
+    margin: 0 0 20px 0;
+    font-size: 1.1rem;
+}

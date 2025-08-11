@@ -1,0 +1,244 @@
+/* =================================
+   Pagina Menu (menu.css)
+==================================== */
+.menu-page-container {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    align-items: flex-start;
+}
+
+.product-list-container {
+    flex: 2;
+}
+
+.cart-container {
+    flex: 1;
+    position: sticky;
+    top: 90px;
+}
+
+.btn-back-summary {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* Stile Barra di Ricerca */
+.search-bar-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-bar-container i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.search-bar-container input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+/* Categorie "Sticky" */
+.category-nav {
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: white;
+    padding: 10px 0;
+    position: sticky;
+    top: 70px;
+    z-index: 100;
+}
+
+.category-link {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #555;
+    font-weight: bold;
+    border-bottom: 3px solid transparent;
+}
+
+.category-link.active,
+.category-link:hover {
+    color: #333;
+    border-bottom-color: #343a40;
+}
+
+/* Correzione scrolling e stile card prodotti */
+.product-category {
+    margin-bottom: 40px;
+    scroll-margin-top: 140px;
+    /* Correzione scrolling (header + category nav) */
+}
+
+.product-category h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.product-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #e9ecef;
+}
+
+.product-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.product-details {
+    flex-grow: 1;
+}
+
+.product-details h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+}
+
+.product-details p {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.product-price {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.add-to-cart-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #e9ecef;
+}
+
+/* Riepilogo Ordine (Carrello) */
+.cart-card {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.cart-card h3 {
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    margin: 0 0 20px 0;
+}
+
+.cart-items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.empty-cart-message {
+    text-align: center;
+    color: #888;
+    padding: 20px 0;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 0.9rem;
+}
+
+.cart-item-name {
+    font-weight: bold;
+}
+
+.remove-item-btn {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 5px;
+}
+
+.cart-summary {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+}
+
+.summary-delivery p {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 15px;
+}
+
+/* ============================================= */
+/* NUOVO STILE PER IL PULSANTE CHECKOUT */
+/* ============================================= */
+.btn-checkout {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #343a40;
+    /* Colore scuro primario */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-checkout:hover:not(:disabled) {
+    background-color: #555;
+    transform: translateY(-2px);
+    /* Leggero effetto al passaggio */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-checkout:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
