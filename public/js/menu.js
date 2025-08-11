@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // --- LOGICA CARRELLO ---
     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
     const cartItemsList = document.getElementById('cart-items-list');
-    const emptyCartMessage = document.querySelector('.empty-cart-message');
     const summaryTotalPrice = document.getElementById('summary-total-price');
     const checkoutButton = document.querySelector('.btn-checkout');
     let cart = [];
@@ -50,24 +50,104 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // --- LOGICA RICERCA ---
+    const searchInput = document.querySelector('.search-bar-container input');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function () {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('.product-category').forEach(category => {
+                let categoryHasVisibleItems = false;
+                category.querySelectorAll('.product-item').forEach(item => {
+                    const name = item.querySelector('h3').textContent.toLowerCase();
+                    if (name.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                        categoryHasVisibleItems = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                category.querySelector('h2').style.display = categoryHasVisibleItems ? 'block' : 'none';
+            });
+        });
+    }
+
+    // --- LOGICA SELEZIONE GIORNO E ORA ---
+    const summaryDay = document.getElementById('summary-day');
+    const summaryTime = document.getElementById('summary-time');
+    const dayButtons = document.querySelectorAll('.day-selector-btn');
+    const timeSlotButtons = document.querySelectorAll('.time-slot-btn:not(.disabled)');
+
+    dayButtons.forEach(button => {
+        if (button.classList.contains('active')) {
+            summaryDay.textContent = button.textContent.trim();
+        }
+    });
+
+    timeSlotButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            timeSlotButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            summaryTime.textContent = this.textContent.trim();
+        });
+    });
+
+    // --- LOGICA OVERLAY ---
     const overlay = document.getElementById('componi-panino-overlay');
     const openOverlayButtons = document.querySelectorAll('.open-overlay-btn');
     const closeOverlayButton = document.getElementById('close-overlay-btn');
+    const overlayTitle = document.getElementById('overlay-title');
+    const ingredientPicker = document.querySelector('.ingredient-picker');
+
+    let limitiSelezione = {};
 
     if (overlay) {
         openOverlayButtons.forEach(button => {
             button.addEventListener('click', () => {
+                limitiSelezione = {
+                    pane: parseInt(button.dataset.limitePane),
+                    proteina: parseInt(button.dataset.limiteProteina),
+                    contorno: parseInt(button.dataset.limiteContorno),
+                    salsa: parseInt(button.dataset.limiteSalsa),
+                };
+
+                overlayTitle.textContent = button.dataset.nomePanino;
+                document.getElementById('proteina-title').innerHTML = `Scegli la Proteina <span class="required-badge">${limitiSelezione.proteina} Obbligatori</span>`;
+                document.getElementById('contorno-title').innerHTML = `Scegli il Contorno <span class="required-badge">${limitiSelezione.contorno} Opzionali</span>`;
+                document.getElementById('salsa-title').innerHTML = `Scegli la Salsa <span class="required-badge">${limitiSelezione.salsa} Opzionali</span>`;
+
                 overlay.style.display = 'flex';
+                document.body.classList.add('overlay-open');
             });
         });
 
-        closeOverlayButton.addEventListener('click', () => {
+        const closeOverlay = () => {
             overlay.style.display = 'none';
-        });
+            document.body.classList.remove('overlay-open');
+            ingredientPicker.querySelectorAll('input').forEach(input => input.checked = false);
+            ingredientPicker.querySelectorAll('input[type="checkbox"]').forEach(input => input.disabled = false);
+        };
 
+        closeOverlayButton.addEventListener('click', closeOverlay);
         overlay.addEventListener('click', (event) => {
             if (event.target === overlay) {
-                overlay.style.display = 'none';
+                closeOverlay();
+            }
+        });
+
+        ingredientPicker.addEventListener('change', (event) => {
+            if (event.target.type !== 'checkbox') return;
+
+            const categoriaDiv = event.target.closest('.ingredient-category');
+            const categoria = categoriaDiv.dataset.categoria;
+            const limite = limitiSelezione[categoria];
+
+            const checkedInputs = categoriaDiv.querySelectorAll('input[type="checkbox"]:checked');
+            const uncheckedInputs = categoriaDiv.querySelectorAll('input[type="checkbox"]:not(:checked)');
+
+            if (checkedInputs.length >= limite) {
+                uncheckedInputs.forEach(input => input.disabled = true);
+            } else {
+                uncheckedInputs.forEach(input => input.disabled = false);
             }
         });
     }

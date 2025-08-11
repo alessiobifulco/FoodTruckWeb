@@ -9,19 +9,58 @@ if (session_status() == PHP_SESSION_NONE) {
 $page_title = "Il Nostro Menu";
 include_once __DIR__ . '/../templates/header.php';
 
-// --- LOGICA PER RECUPERARE I PRODOTTI DAL DATABASE ---
-$prodotti_per_categoria = [];
-$sql = "SELECT id_prodotto, nome, descrizione, prezzo, categoria, path_immagine FROM Prodotti WHERE disponibile = TRUE ORDER BY FIELD(categoria, 'panino_predefinito', 'pizzetta', 'panino_componibile', 'bevanda')";
-$result = $conn->query($sql);
+// --- LOGICA PER GIORNO E FASCE ORARIE ---
+$selected_day = $_GET['day'] ?? 'today';
+if ($selected_day === 'tomorrow') {
+    $selected_date_obj = new DateTime('tomorrow');
+} else {
+    $selected_date_obj = new DateTime('today');
+}
 
-if ($result) {
+$selected_date_str = $selected_date_obj->format('Y-m-d');
+$day_of_week_english = strtolower($selected_date_obj->format('l'));
+$giorni_italiano = ['monday' => 'lunedi', 'tuesday' => 'martedi', 'wednesday' => 'mercoledi', 'thursday' => 'giovedi', 'friday' => 'venerdi'];
+$giorno_settimana_db = $giorni_italiano[$day_of_week_english] ?? '';
+
+$fasce_orarie = [];
+if ($giorno_settimana_db) {
+    $stmt = $conn->prepare("
+        SELECT fo.ora_inizio, fo.ora_fine, fo.capacita_massima, sfg.stato_giornaliero, sfg.numero_ordini_correnti
+        FROM FasceOrarie fo
+        LEFT JOIN StatoFasceGiornaliere sfg ON fo.id_fascia = sfg.id_fascia AND sfg.data_riferimento = ?
+        WHERE fo.giorno_settimana = ? AND fo.attiva = TRUE
+        ORDER BY fo.ora_inizio
+    ");
+    $stmt->bind_param("ss", $selected_date_str, $giorno_settimana_db);
+    $stmt->execute();
+    $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
+        $fasce_orarie[] = $row;
+    }
+    $stmt->close();
+}
+
+// --- LOGICA PER RECUPERARE PRODOTTI E INGREDIENTI ---
+$prodotti_per_categoria = [];
+$sql_prodotti = "SELECT * FROM Prodotti WHERE disponibile = TRUE ORDER BY FIELD(categoria, 'panino_predefinito', 'pizzetta', 'panino_componibile', 'bevanda')";
+$result_prodotti = $conn->query($sql_prodotti);
+if ($result_prodotti) {
+    while ($row = $result_prodotti->fetch_assoc()) {
         $prodotti_per_categoria[$row['categoria']][] = $row;
     }
 }
 
-// Simuliamo di aver ricevuto giorno e ora dalla pagina precedente (da salvare in sessione)
-$_SESSION['giorno_consegna'] = $_SESSION['giorno_consegna'] ?? 'Oggi';
+$ingredienti_per_categoria = [];
+$sql_ingredienti = "SELECT nome, categoria_ingrediente FROM Ingredienti WHERE disponibile = TRUE ORDER BY FIELD(categoria_ingrediente, 'pane', 'proteina', 'contorno', 'salsa')";
+$result_ingredienti = $conn->query($sql_ingredienti);
+if ($result_ingredienti) {
+    while ($row = $result_ingredienti->fetch_assoc()) {
+        $ingredienti_per_categoria[$row['categoria_ingrediente']][] = $row;
+    }
+}
+
+// Imposto i valori di default per il riepilogo
+$_SESSION['giorno_consegna'] = $selected_day === 'today' ? 'Oggi' : 'Domani';
 $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
 ?>
 
@@ -36,7 +75,28 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
 
     <div class="menu-page-container">
         <main class="product-list-container">
-            <a href="order.php#riepilogo-ordine" class="btn-back-summary">Riepilogo Ordine</a>
+
+            <section class="time-selection-menu">
+                <h3>Scegli Giorno e Ora di Consegna</h3>
+                <div class="day-selector">
+                    <a href="menu.php?day=today" class="day-selector-btn <?php echo ($selected_day === 'today') ? 'active' : ''; ?>">Oggi</a>
+                    <a href="menu.php?day=tomorrow" class="day-selector-btn <?php echo ($selected_day === 'tomorrow') ? 'active' : ''; ?>">Domani</a>
+                </div>
+                <div class="time-slots">
+                    <?php if (empty($fasce_orarie)): ?>
+                        <p class="no-slots-message">Nessuna fascia oraria disponibile per il giorno selezionato.</p>
+                    <?php else: ?>
+                        <?php foreach ($fasce_orarie as $fascia):
+                            $is_full = ($fascia['stato_giornaliero'] === 'piena' || ($fascia['numero_ordini_correnti'] ?? 0) >= $fascia['capacita_massima']);
+                            $label = date('H:i', strtotime($fascia['ora_inizio'])) . ' - ' . date('H:i', strtotime($fascia['ora_fine']));
+                        ?>
+                            <button class="time-slot-btn <?php echo $is_full ? 'disabled' : ''; ?>" data-timeslot="<?php echo $label; ?>" <?php echo $is_full ? 'disabled' : ''; ?>>
+                                <?php echo $label; ?>
+                            </button>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </section>
 
             <div class="search-bar-container">
                 <i class="fas fa-search"></i>
@@ -82,15 +142,31 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
 
             <section id="componi" class="product-category">
                 <h2>Componi il tuo Panino</h2>
-                <?php foreach ($prodotti_per_categoria['panino_componibile'] ?? [] as $prodotto): ?>
+                <?php foreach ($prodotti_per_categoria['panino_componibile'] ?? [] as $prodotto):
+                    $limiti = ['pane' => 1, 'proteina' => 1, 'contorno' => 1, 'salsa' => 1];
+                    if (strpos($prodotto['nome'], 'Grande') !== false) {
+                        $limiti = ['pane' => 1, 'proteina' => 1, 'contorno' => 2, 'salsa' => 2];
+                    } elseif (strpos($prodotto['nome'], 'Maxi') !== false) {
+                        $limiti = ['pane' => 1, 'proteina' => 2, 'contorno' => 3, 'salsa' => 2];
+                    }
+                ?>
                     <div class="product-item">
-                        <img src="img/paninocomponibile.png" alt="Componi il tuo panino" class="product-item-image">
+                        <img src="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>" alt="Componi il tuo panino" class="product-item-image">
                         <div class="product-details">
-                            <h3><?php echo htmlspecialchars($prodotto['nome']); ?></h3>
+                            <h3><?php echo htmlspecialchars(str_replace(' (base)', '', $prodotto['nome'])); ?></h3>
                             <p><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
                             <span class="product-price"><?php echo number_format($prodotto['prezzo'], 2, ',', ''); ?> €</span>
                         </div>
-                        <div class="product-action"><button class="add-to-cart-btn open-overlay-btn">SCEGLI</button></div>
+                        <div class="product-action">
+                            <button class="open-overlay-btn"
+                                data-limite-pane="<?php echo $limiti['pane']; ?>"
+                                data-limite-proteina="<?php echo $limiti['proteina']; ?>"
+                                data-limite-contorno="<?php echo $limiti['contorno']; ?>"
+                                data-limite-salsa="<?php echo $limiti['salsa']; ?>"
+                                data-nome-panino="<?php echo htmlspecialchars(str_replace(' (base)', '', $prodotto['nome'])); ?>">
+                                SCEGLI
+                            </button>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </section>
@@ -130,6 +206,49 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
                 </div>
             </div>
         </aside>
+    </div>
+
+    <div id="componi-panino-overlay" class="overlay-container">
+        <div class="overlay-content">
+            <button id="close-overlay-btn" class="close-btn">&times;</button>
+            <h3 id="overlay-title">Componi il tuo Panino</h3>
+
+            <div class="ingredient-picker">
+                <div class="ingredient-category" data-categoria="pane">
+                    <h4>Scegli il Pane <span class="required-badge">1 Obbligatorio</span></h4>
+                    <?php foreach ($ingredienti_per_categoria['pane'] ?? [] as $ingrediente): ?>
+                        <label class="ingredient-option"><input type="radio" name="pane"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <?php endforeach; ?>
+                </div>
+                <div class="ingredient-category" data-categoria="proteina">
+                    <h4 id="proteina-title">Scegli la Proteina</h4>
+                    <?php foreach ($ingredienti_per_categoria['proteina'] ?? [] as $ingrediente): ?>
+                        <label class="ingredient-option"><input type="checkbox" name="proteina[]"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <?php endforeach; ?>
+                </div>
+                <div class="ingredient-category" data-categoria="contorno">
+                    <h4 id="contorno-title">Scegli il Contorno</h4>
+                    <?php foreach ($ingredienti_per_categoria['contorno'] ?? [] as $ingrediente): ?>
+                        <label class="ingredient-option"><input type="checkbox" name="contorno[]"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <?php endforeach; ?>
+                </div>
+                <div class="ingredient-category" data-categoria="salsa">
+                    <h4 id="salsa-title">Scegli la Salsa</h4>
+                    <?php foreach ($ingredienti_per_categoria['salsa'] ?? [] as $ingrediente): ?>
+                        <label class="ingredient-option"><input type="checkbox" name="salsa[]"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="overlay-footer">
+                <div class="quantity-selector">
+                    <button type="button">-</button>
+                    <span>1</span>
+                    <button type="button">+</button>
+                </div>
+                <button class="btn-submit">Aggiungi al Carrello</button>
+            </div>
+        </div>
     </div>
 
     <script src="js/menu.js"></script>

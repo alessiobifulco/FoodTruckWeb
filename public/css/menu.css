@@ -20,18 +20,93 @@
     top: 90px;
 }
 
-.btn-back-summary {
-    display: inline-block;
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    margin-bottom: 30px;
+.time-selection-menu {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    border: 1px solid #e0e0e0;
 }
 
-/* Stile Barra di Ricerca */
+.time-selection-menu h3 {
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.day-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.day-selector-btn {
+    padding: 10px 25px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #333;
+}
+
+.day-selector-btn:hover {
+    background-color: #e9ecef;
+}
+
+.day-selector-btn.active {
+    background-color: #343a40;
+    color: white;
+    border-color: #343a40;
+}
+
+.time-slots {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.no-slots-message {
+    width: 100%;
+    text-align: center;
+    color: #888;
+}
+
+.time-slot-btn {
+    padding: 8px 18px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.time-slot-btn:hover {
+    background-color: #e9ecef;
+    border-color: #aaa;
+}
+
+.time-slot-btn.active {
+    background-color: #343a40;
+    color: white;
+    border-color: #343a40;
+}
+
+.time-slot-btn.disabled {
+    background-color: #f8f9fa;
+    color: #ccc;
+    cursor: not-allowed;
+    border-color: #e9ecef;
+}
+
 .search-bar-container {
     position: relative;
     margin-bottom: 20px;
@@ -54,7 +129,6 @@
     box-sizing: border-box;
 }
 
-/* Categorie "Sticky" */
 .category-nav {
     display: flex;
     gap: 10px;
@@ -80,11 +154,9 @@
     border-bottom-color: #343a40;
 }
 
-/* Correzione scrolling e stile card prodotti */
 .product-category {
     margin-bottom: 40px;
     scroll-margin-top: 140px;
-    /* Correzione scrolling (header + category nav) */
 }
 
 .product-category h2 {
@@ -132,7 +204,8 @@
     font-size: 1.1rem;
 }
 
-.add-to-cart-btn {
+.add-to-cart-btn,
+.open-overlay-btn {
     background-color: #f8f9fa;
     border: 1px solid #ccc;
     color: #333;
@@ -142,11 +215,11 @@
     font-weight: bold;
 }
 
-.add-to-cart-btn:hover {
+.add-to-cart-btn:hover,
+.open-overlay-btn:hover {
     background-color: #e9ecef;
 }
 
-/* Riepilogo Ordine (Carrello) */
 .cart-card {
     background-color: #f8f9fa;
     border-radius: 12px;
@@ -211,15 +284,11 @@
     margin-top: 15px;
 }
 
-/* ============================================= */
-/* NUOVO STILE PER IL PULSANTE CHECKOUT */
-/* ============================================= */
 .btn-checkout {
     width: 100%;
     padding: 15px;
     margin-top: 20px;
     background-color: #343a40;
-    /* Colore scuro primario */
     color: white;
     border: none;
     border-radius: 8px;
@@ -234,11 +303,139 @@
 .btn-checkout:hover:not(:disabled) {
     background-color: #555;
     transform: translateY(-2px);
-    /* Leggero effetto al passaggio */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .btn-checkout:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+/* Overlay "Componi il tuo Panino" */
+body.overlay-open {
+    overflow: hidden;
+}
+
+.overlay-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.overlay-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 550px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.overlay-content h3 {
+    font-family: 'Oswald', sans-serif;
+    margin: 0 0 20px 0;
+    font-size: 1.8rem;
+}
+
+.ingredient-picker {
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+.ingredient-category {
+    margin-bottom: 25px;
+}
+
+.ingredient-category h4 {
+    margin: 0 0 15px 0;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.required-badge {
+    background-color: #ffc107;
+    color: #333;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: normal;
+}
+
+.ingredient-option {
+    display: block;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.ingredient-option input {
+    margin-right: 10px;
+}
+
+.overlay-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.quantity-selector button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.quantity-selector span {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.overlay-footer .btn-submit {
+    padding: 12px 30px;
+    background-color: #343a40;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    cursor: pointer;
 }
