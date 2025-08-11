@@ -1,0 +1,473 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Oswald:wght@700&display=swap');
+
+/* =================================
+   Stili Generali e Body
+==================================== */
+body {
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    padding-top: 70px;
+    /* Spazio per l'header fisso */
+}
+
+/* =================================
+   Header (Versione Definitiva)
+==================================== */
+.header-fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #343a40;
+    z-index: 1030;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.header-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 70px;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.header-left,
+.header-center,
+.header-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.header-left {
+    justify-content: flex-start;
+}
+
+.header-center {
+    justify-content: center;
+}
+
+.header-right {
+    justify-content: flex-end;
+    gap: 30px;
+}
+
+.header-nav a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.header-nav a:hover {
+    color: #c5a9ff;
+}
+
+.header-left i {
+    font-size: 2.2rem;
+}
+
+.header-center a {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.header-right i {
+    font-size: 1.9rem;
+}
+
+
+/* =================================
+   Hero Section
+==================================== */
+.hero-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    background-image: url('../img/home.png');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+.hero-main-title {
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    font-size: 5.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    margin-bottom: 80px;
+}
+
+.hero-panel {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 550px;
+    width: 100%;
+}
+
+.promo-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px 0;
+    text-align: left;
+}
+
+.promo-list li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.promo-list li i {
+    color: #007bff;
+    font-size: 1.3rem;
+}
+
+.hero-cta {
+    margin-top: 20px;
+}
+
+.hero-cta p {
+    margin: 0 0 15px 0;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.btn-hero {
+    display: inline-block;
+    background-color: #343a40;
+    color: white;
+    padding: 12px 35px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+.btn-hero:hover {
+    transform: scale(1.05);
+}
+
+/* =================================
+   Menu Section
+==================================== */
+.menu-section {
+    background-color: #f8f9fa;
+}
+
+.menu-dark-container {
+    background-color: #343a40;
+    color: white;
+    padding: 40px 0 60px 0;
+    text-align: center;
+}
+
+.menu-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.products-scroller {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px 30px;
+    scrollbar-width: thin;
+    scrollbar-color: #ffc107 #555;
+}
+
+.products-scroller::-webkit-scrollbar {
+    height: 8px;
+}
+
+.products-scroller::-webkit-scrollbar-track {
+    background: #555;
+}
+
+.products-scroller::-webkit-scrollbar-thumb {
+    background-color: #ffc107;
+    border-radius: 10px;
+}
+
+.product-card {
+    flex: 0 0 250px;
+    background-color: white;
+    color: #333;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 15px;
+    text-align: left;
+}
+
+.product-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
+    margin: 0 0 5px 0;
+}
+
+.product-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.curved-separator {
+    background-color: #343a40;
+    height: 80px;
+    border-bottom-left-radius: 50% 100%;
+    border-bottom-right-radius: 50% 100%;
+}
+
+.menu-light-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 40px 20px;
+    margin-top: -50px;
+}
+
+.custom-order-card,
+.time-slots-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 450px;
+}
+
+.custom-order-card h3,
+.time-slots-card h4 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    margin: 0 0 10px 0;
+}
+
+.time-slots-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.time-slots-card li {
+    background-color: #e9ecef;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* =================================
+   Contact Section
+==================================== */
+.contact-section {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #f8f9fa;
+}
+
+.contact-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.8rem;
+    margin-bottom: 40px;
+}
+
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+.btn-submit {
+    background-color: #343a40;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-self: center;
+}
+
+.btn-submit:hover {
+    background-color: #555;
+}
+
+.footer-summary-text {
+    margin-top: 40px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+
+/* =================================
+   Login/Register Page
+==================================== */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    min-height: calc(100vh - 140px);
+    background-color: #f8f9fa;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.auth-tabs {
+    display: flex;
+}
+
+.auth-tab-btn {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    background-color: #e9ecef;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    color: #666;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 3px solid transparent;
+}
+
+.auth-tab-btn.active {
+    background-color: white;
+    color: #333;
+    border-bottom-color: #007bff;
+}
+
+.auth-form-container {
+    padding: 30px 40px;
+}
+
+.form-title {
+    font-family: 'Oswald', sans-serif;
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-link {
+    display: block;
+    text-align: right;
+    font-size: 0.8rem;
+    margin-top: 8px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.form-link:hover {
+    text-decoration: underline;
+}
+
+.auth-form .btn-submit {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Messaggi di errore e successo */
+.message {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
