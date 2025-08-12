@@ -1,0 +1,103 @@
+/* =================================
+   Header (header.css)
+==================================== */
+.header-fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #343a40;
+    z-index: 1030;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.header-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 70px;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header-left,
+.header-center,
+.header-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.header-left {
+    justify-content: flex-start;
+    padding-left: 25px;
+}
+
+.header-center {
+    justify-content: center;
+}
+
+.header-right {
+    justify-content: flex-end;
+    gap: 30px;
+    padding-right: 25px;
+}
+
+.header-nav a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.header-nav a:hover {
+    color: #c5a9ff;
+}
+
+.header-left i {
+    font-size: 2.2rem;
+}
+
+.header-center a {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.header-right i {
+    font-size: 1.9rem;
+}
+
+/* Stili per Menu a Tendina Utente */
+.user-menu-container {
+    position: relative;
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    min-width: 160px;
+    z-index: 101;
+    overflow: hidden;
+}
+
+.user-menu-container:hover .user-dropdown {
+    display: block;
+}
+
+.user-dropdown a {
+    display: block;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.user-dropdown a:hover {
+    background-color: #f8f9fa;
+}

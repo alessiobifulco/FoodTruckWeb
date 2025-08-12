@@ -1,0 +1,145 @@
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    min-height: calc(100vh - 140px);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.auth-tabs {
+    display: flex;
+}
+
+.auth-tab-btn {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    background-color: #e9ecef;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    color: #666;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 3px solid transparent;
+}
+
+.auth-tab-btn.active {
+    background-color: white;
+    color: #333;
+    border-bottom-color: #007bff;
+}
+
+.auth-form-container {
+    padding: 30px 40px;
+}
+
+.form-title {
+    font-family: 'Oswald', sans-serif;
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-link {
+    display: block;
+    text-align: right;
+    font-size: 0.8rem;
+    margin-top: 8px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.form-link:hover {
+    text-decoration: underline;
+}
+
+.auth-form .btn-submit {
+    width: 100%;
+    margin-top: 10px;
+    background-color: #343a40;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.auth-form .btn-submit:hover {
+    background-color: #555;
+}
+
+#password-strength-meter {
+    margin-top: 8px;
+    height: 15px;
+    width: 100%;
+    background-color: #eee;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+#password-strength-bar {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+#password-strength-bar.weak {
+    width: 25%;
+    background-color: #e74c3c;
+}
+
+#password-strength-bar.medium {
+    width: 60%;
+    background-color: #f39c12;
+}
+
+#password-strength-bar.strong {
+    width: 100%;
+    background-color: #2ecc71;
+}
+
+#password-strength-text {
+    font-size: 0.8rem;
+    font-weight: bold;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
