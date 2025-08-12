@@ -1,0 +1,168 @@
+/* =================================
+   Pagina Account (account.css)
+==================================== */
+.account-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.account-container h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.account-section {
+    margin-bottom: 50px;
+}
+
+.account-section h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Card Dettagli */
+.details-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.btn-secondary {
+    padding: 8px 15px;
+    border: 1px solid #343a40;
+    background-color: transparent;
+    color: #343a40;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-danger {
+    padding: 8px 15px;
+    border: 1px solid #dc3545;
+    background-color: #dc3545;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Storico Ordini */
+.order-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.order-info {
+    display: flex;
+    gap: 25px;
+}
+
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.status-consegnato {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-in_preparazione {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-in_consegna {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.status-ricevuto {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-annullato {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Notifiche */
+.notification-item {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border-left: 5px solid #ccc;
+    /* Grigio per notifiche lette */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.notification-item.unread {
+    border-left-color: #007bff;
+    /* Blu per quelle da leggere */
+    background-color: #f8f9fa;
+}
+
+.notification-text {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.notification-text i {
+    color: #555;
+    font-size: 1.2rem;
+}
+
+.notification-text p {
+    margin: 0;
+}
+
+.notification-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.btn-link,
+.btn-link-danger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.btn-link {
+    color: #007bff;
+}
+
+.btn-link-danger {
+    color: #dc3545;
+}
