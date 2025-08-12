@@ -1,0 +1,287 @@
+/* =================================
+   Stili Homepage (home.css)
+==================================== */
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Hero Section */
+.hero-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    background-image: url('../img/home.png');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+.hero-main-title {
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    font-size: 5.5rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    margin-bottom: 80px;
+}
+
+.hero-panel {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 550px;
+    width: 100%;
+}
+
+.promo-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px 0;
+    text-align: left;
+}
+
+.promo-list li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.promo-list li i {
+    color: #007bff;
+    font-size: 1.3rem;
+}
+
+.hero-cta {
+    margin-top: 20px;
+}
+
+.hero-cta p {
+    margin: 0 0 15px 0;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.btn-hero {
+    display: inline-block;
+    background-color: #343a40;
+    color: white;
+    padding: 12px 35px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+.btn-hero:hover {
+    transform: scale(1.05);
+}
+
+/* Homepage Menu Section */
+.menu-section {
+    background-color: #f8f9fa;
+}
+
+.menu-dark-container {
+    background-color: #343a40;
+    color: white;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.menu-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.products-scroller {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+    mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+}
+
+.scroller-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    width: max-content;
+    animation: scroll 40s linear infinite;
+}
+
+.products-scroller:hover .scroller-inner {
+    animation-play-state: paused;
+}
+
+@keyframes scroll {
+    to {
+        transform: translate(calc(-50%));
+    }
+}
+
+.product-card {
+    flex: 0 0 250px;
+    margin: 0 10px;
+    background-color: white;
+    color: #333;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 15px;
+    text-align: left;
+}
+
+.product-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
+    margin: 0 0 8px 0;
+}
+
+.product-description-home {
+    font-size: 0.9rem;
+    color: #666;
+    height: 3.6em;
+    overflow: hidden;
+}
+
+.curved-separator {
+    background-color: #343a40;
+    height: 80px;
+    border-bottom-left-radius: 50% 100%;
+    border-bottom-right-radius: 50% 100%;
+}
+
+.menu-light-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+    margin-top: -20px;
+    position: relative;
+    z-index: 2;
+}
+
+.custom-order-card,
+.time-slots-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 450px;
+}
+
+/* MODIFICA: Aggiunto margine specifico per separare le card */
+.custom-order-card {
+    margin-bottom: 40px;
+}
+
+.custom-order-card h3,
+.time-slots-card h4 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    margin: 0 0 10px 0;
+}
+
+.time-slots-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.time-slots-card li {
+    background-color: #e9ecef;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* Contact Section */
+.contact-section {
+    padding: 60px 0;
+    text-align: center;
+    background-color: #f8f9fa;
+}
+
+.contact-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.8rem;
+    margin-bottom: 40px;
+}
+
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+.contact-form .btn-submit {
+    background-color: #343a40;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-self: center;
+}
+
+.contact-form .btn-submit:hover {
+    background-color: #555;
+}
+
+.footer-summary-text {
+    margin-top: 40px;
+    color: #666;
+    font-size: 0.9rem;
+}
