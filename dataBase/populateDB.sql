@@ -12,33 +12,45 @@ INSERT INTO `Prodotti` (`nome`, `descrizione`, `prezzo`, `categoria`, `path_imma
 ('Panino con cotolettetta', 'pane arabo, cotoletta, insalata, maionese', 4.00, 'panino_predefinito', 'img/paninocotoletta.png', TRUE),
 ('Panino con cotto', 'pane ciabatta, cotto, fontina', 3.50, 'panino_predefinito', 'img/paninocotto.png', TRUE),
 ('Panino con crudo', 'pane integrale, crudo, rucola, squacquerone', 4.00, 'panino_predefinito', 'img/paninocrudo.png', TRUE),
+('Panino Bresaola e Philadelphia', 'Pane al carbone con bresaola, pomodorini e Philadelphia', 5.00, 'panino_predefinito', 'img/paninonero.png', TRUE),
+('Panino con Salame Nostrano', 'Pane rosetta con salame nostrano', 4.00, 'panino_predefinito', 'img/paninosalame.png', TRUE),
 ('Margherita', 'pomodoro, mozzarella', 2.50, 'pizzetta', 'img/pizzettamargherita.png', TRUE),
-('Pizzetta Farcita 1', 'pomodoro, mozzarella, salsiccia', 3.00, 'pizzetta', 'img/pizzettasalsiccia.png', TRUE),
-('Pizzetta Farcita 2', 'pomodoro, mozzarella, patatine, wurstel', 3.00, 'pizzetta', 'img/pizzettawurstel.png', TRUE),
+('Pizzetta Salsiccia', 'pomodoro, mozzarella, salsiccia', 3.00, 'pizzetta', 'img/pizzettasalsiccia.png', TRUE),
+('Pizzetta Wurstel e Patatine', 'pomodoro, mozzarella, patatine, wurstel', 3.00, 'pizzetta', 'img/pizzettawurstel.png', TRUE),
 ('Pizzetta Rossa', 'pomodoro', 2.00, 'pizzetta', 'img/pizzettarossa.png', TRUE),
-('Pizzetta Farcita 3', 'mozzarella, cotto', 2.50, 'pizzetta', 'img/pizzettacotto.png', TRUE),
-('Acqua da 50ml', 'Acqua minerale naturale', 1.50, 'bevanda', 'img/acqua.png', TRUE),
+('Pizzetta Cotto', 'mozzarella, cotto', 2.50, 'pizzetta', 'img/pizzettacotto.png', TRUE),
+('Pizzetta Salame Piccante', 'Pomodoro, mozzarella e salame piccante', 3.50, 'pizzetta', 'img/pizzettasalamepiccante.png', TRUE),
+('Focaccia con Olio e Sale', 'Semplice focaccia con olio extra vergine e sale', 2.50, 'pizzetta', 'img/focaccia.png', TRUE),
+('Acqua da 500ml', 'Acqua minerale naturale', 1.50, 'bevanda', 'img/acqua.png', TRUE),
 ('Coca Cola lattina', 'Lattina 330ml', 2.50, 'bevanda', 'img/cocacola.png', TRUE),
 ('Succo cartone', 'Succo di frutta vari gusti (cartone 200ml)', 3.00, 'bevanda', 'img/succo.png', TRUE),
-('Panino Normale (base)', 'Base per panino componibile: 1 pane, 1 ingrediente, 1 contorno, 1 salsa', 4.50, 'panino_componibile', 'img/paninocomponibile.png', TRUE),
-('Panino Grande (base)', 'Base per panino componibile: 1 pane, 1 ingrediente, 2 contorni, 2 salse', 5.50, 'panino_componibile', 'img/paninocomponibile.png', TRUE),
-('Panino Maxi (base)', 'Base per panino componibile: 1 pane, 2 ingredienti, 3 contorni, 2 salse', 7.00, 'panino_componibile', 'img/paninocomponibile.png', TRUE);
+('Panino Normale (base)', '1 pane, 1 proteina, 1 contorno, 1 salsa', 4.50, 'panino_componibile', 'img/paninocomponibile.png', TRUE),
+('Panino Grande (base)', '1 pane, 1 proteina, 2 contorni, 2 salse', 5.50, 'panino_componibile', 'img/paninocomponibile.png', TRUE),
+('Panino Maxi (base)', '1 pane, 2 proteine, 3 contorni, 2 salse', 7.00, 'panino_componibile', 'img/paninocomponibile.png', TRUE);
 
 
 INSERT INTO `Ingredienti` (`nome`, `categoria_ingrediente`, `disponibile`) VALUES
 ('Pane Arabo', 'pane', TRUE),
 ('Ciabatta', 'pane', TRUE),
 ('Pane Integrale', 'pane', TRUE),
+('Pane Rosetta', 'pane', TRUE),
+('Pane al Carbone', 'pane', TRUE),
+('Focaccia', 'pane', TRUE),
 ('Cotoletta', 'proteina', TRUE),
 ('Prosciutto Cotto', 'proteina', TRUE),
 ('Prosciutto Crudo', 'proteina', TRUE),
+('Salame Nostrano', 'proteina', TRUE),
+('Bresaola', 'proteina', TRUE),
+('Salame Piccante', 'proteina', TRUE),
 ('Insalata', 'contorno', TRUE),
 ('Pomodoro', 'contorno', TRUE),
 ('Cipolla', 'contorno', TRUE),
 ('Rucola', 'contorno', TRUE),
+('Pomodorini', 'contorno', TRUE),
 ('Maionese', 'salsa', TRUE),
 ('Ketchup', 'salsa', TRUE),
-('Salsa BBQ', 'salsa', TRUE);
+('Salsa BBQ', 'salsa', TRUE),
+('Philadelphia', 'salsa', TRUE);
 
 INSERT INTO `FasceOrarie` (`giorno_settimana`, `ora_inizio`, `ora_fine`, `attiva`, `capacita_massima`) VALUES
 ('lunedi', '11:00:00', '11:30:00', TRUE, 10),
