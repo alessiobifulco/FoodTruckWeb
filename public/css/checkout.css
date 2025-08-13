@@ -36,7 +36,6 @@
     color: white;
 }
 
-
 .checkout-container {
     display: flex;
     gap: 50px;
@@ -66,7 +65,6 @@
     margin-bottom: 30px;
 }
 
-/* Form */
 .form-group {
     margin-bottom: 20px;
 }
@@ -103,7 +101,6 @@
     flex: 1;
 }
 
-/* Riepilogo */
 .summary-delivery-info {
     text-align: center;
     margin-bottom: 20px;
@@ -198,6 +195,55 @@
 
 .btn-pay:hover {
     background-color: #555;
+}
+
+/* Stili per la visualizzazione carrello vuoto */
+.checkout-container-empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+}
+
+.empty-cart-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+}
+
+.empty-cart-icon {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.empty-cart-card h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    margin: 0 0 10px 0;
+}
+
+.empty-cart-card p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
 }
 
 @media (max-width: 768px) {
