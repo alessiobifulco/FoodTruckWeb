@@ -64,7 +64,15 @@ INSERT INTO `FasceOrarie` (`giorno_settimana`, `ora_inizio`, `ora_fine`, `attiva
 ('martedi', '11:00:00', '11:30:00', TRUE, 10),
 ('martedi', '11:30:00', '12:00:00', TRUE, 10),
 ('martedi', '12:00:00', '12:30:00', TRUE, 10),
-('martedi', '12:30:00', '13:00:00', TRUE, 10); 
+('martedi', '12:30:00', '13:00:00', TRUE, 10),
+
+('mercoledi', '11:00:00', '11:30:00', TRUE, 10),
+('mercoledi', '11:30:00', '12:00:00', TRUE, 10),
+('mercoledi', '12:00:00', '12:30:00', TRUE, 10),
+('mercoledi', '12:30:00', '13:00:00', TRUE, 10),
+('mercoledi', '13:00:00', '13:30:00', TRUE, 10),
+('mercoledi', '13:30:00', '14:00:00', TRUE, 10),
+('mercoledi', '14:00:00', '14:30:00', TRUE, 10);
 
 
 INSERT INTO `StatoFasceGiornaliere` (`id_fascia`, `data_riferimento`, `stato_giornaliero`, `numero_ordini_correnti`) VALUES
