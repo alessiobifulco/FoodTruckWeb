@@ -6,36 +6,29 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Protezione della pagina: se l'utente non è loggato, lo rimanda al login
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
 
-// Logica per rimuovere un articolo dal carrello
 if (isset($_GET['remove'])) {
     $index_to_remove = (int)$_GET['remove'];
     if (isset($_SESSION['cart'][$index_to_remove])) {
         unset($_SESSION['cart'][$index_to_remove]);
-        // Riordina gli indici dell'array per evitare buchi
         $_SESSION['cart'] = array_values($_SESSION['cart']);
     }
-    // Ricarica la pagina senza il parametro GET per evitare rimozioni multiple con un refresh
     header('Location: checkout.php');
     exit;
 }
 
-// Se l'utente arriva qui via POST dal menu, salviamo il carrello in sessione
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
     $_SESSION['cart'] = json_decode($_POST['cart_data'], true);
     $_SESSION['delivery_day'] = htmlspecialchars($_POST['delivery_day']);
     $_SESSION['delivery_time'] = htmlspecialchars($_POST['delivery_time']);
-    // Facciamo un redirect per evitare il reinvio del form con un refresh
     header('Location: checkout.php');
     exit;
 }
 
-// Se il carrello è vuoto (o si arriva qui senza dati), rimanda al menu
 if (empty($_SESSION['cart'])) {
     header('Location: menu.php');
     exit;
@@ -43,7 +36,6 @@ if (empty($_SESSION['cart'])) {
 
 $cart = $_SESSION['cart'];
 define('COSTO_CONSEGNA', 2.00);
-
 $subtotal = 0;
 foreach ($cart as $item) {
     $subtotal += $item['prezzo'];
@@ -57,6 +49,12 @@ include_once __DIR__ . '/../templates/header.php';
 
 <main class="checkout-container">
     <div class="checkout-details">
+
+        <div class="continue-shopping-banner">
+            <p>Vuoi ordinare altro? Torna pure al nostro fantastico menu!</p>
+            <a href="menu.php" class="btn-secondary">Torna al Menu</a>
+        </div>
+
         <h2>Dettagli Consegna</h2>
         <form action="process_order.php" method="POST">
             <div class="form-group">

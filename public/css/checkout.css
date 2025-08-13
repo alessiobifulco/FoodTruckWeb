@@ -2,6 +2,41 @@
    Pagina Checkout (checkout.css)
 ==================================== */
 
+.continue-shopping-banner {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.continue-shopping-banner p {
+    margin: 0 0 15px 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.btn-secondary {
+    display: inline-block;
+    padding: 10px 25px;
+    border: 2px solid #343a40;
+    background-color: transparent;
+    color: #343a40;
+    font-weight: bold;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #343a40;
+    color: white;
+}
+
+
 .checkout-container {
     display: flex;
     gap: 50px;
