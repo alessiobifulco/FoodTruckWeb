@@ -5,7 +5,6 @@ require_once __DIR__ . '/../config/db.php';
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-// Protezione della pagina
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -37,7 +36,7 @@ if ($giorno_settimana_db) {
     $stmt->close();
 }
 
-// --- LOGICA PER RECUPERARE PRODOTTI E INGREDIENTI ---
+// --- LOGICA PER PRODOTTI E INGREDIENTI ---
 $prodotti_per_categoria = [];
 $sql_prodotti = "SELECT * FROM Prodotti WHERE disponibile = TRUE ORDER BY FIELD(categoria, 'panino_predefinito', 'pizzetta', 'panino_componibile', 'bevanda')";
 $result_prodotti = $conn->query($sql_prodotti);
@@ -59,10 +58,8 @@ $_SESSION['giorno_consegna'] = $selected_day === 'today' ? 'Oggi' : 'Domani';
 $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
 ?>
 <link rel="stylesheet" href="css/menu.css">
-
-<div class="menu-page-container">
-    <main class="product-list-container">
-
+<main class="menu-page-container">
+    <div class="product-list-container">
         <section class="time-selection-menu">
             <h3>Scegli Giorno e Ora di Consegna</h3>
             <div class="day-selector">
@@ -71,7 +68,7 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
             </div>
             <div class="time-slots">
                 <?php if (empty($fasce_orarie)): ?>
-                    <p class="no-slots-message">Nessuna fascia oraria disponibile per il giorno selezionato.</p>
+                    <p class="no-slots-message">Nessuna fascia oraria disponibile.</p>
                 <?php else: ?>
                     <?php foreach ($fasce_orarie as $fascia):
                         $is_full = ($fascia['stato_giornaliero'] === 'piena' || ($fascia['numero_ordini_correnti'] ?? 0) >= $fascia['capacita_massima']);
@@ -82,19 +79,13 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
                 <?php endif; ?>
             </div>
         </section>
-
-        <div class="search-bar-container">
-            <i class="fas fa-search"></i>
-            <input type="search" placeholder="Cerca un prodotto...">
-        </div>
-
+        <div class="search-bar-container"><i class="fas fa-search"></i><input type="search" placeholder="Cerca un prodotto..."></div>
         <nav class="category-nav">
             <a href="#panini" class="category-link active">Panini</a>
             <a href="#pizzette" class="category-link">Pizzette</a>
             <a href="#componi" class="category-link">Componi</a>
             <a href="#bevande" class="category-link">Bevande</a>
         </nav>
-
         <section id="panini" class="product-category">
             <h2>Panini</h2>
             <?php foreach ($prodotti_per_categoria['panino_predefinito'] ?? [] as $prodotto): ?>
@@ -105,11 +96,10 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
                         <p><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
                         <span class="product-price"><?php echo number_format($prodotto['prezzo'], 2, ',', ''); ?> €</span>
                     </div>
-                    <div class="product-action"><button class="add-to-cart-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>">AGGIUNGI</button></div>
+                    <div class="product-action"><button class="add-to-cart-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>" data-immagine="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>">AGGIUNGI</button></div>
                 </div>
             <?php endforeach; ?>
         </section>
-
         <section id="pizzette" class="product-category">
             <h2>Pizzette</h2>
             <?php foreach ($prodotti_per_categoria['pizzetta'] ?? [] as $prodotto): ?>
@@ -120,11 +110,10 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
                         <p><?php echo htmlspecialchars($prodotto['descrizione'] ?? ''); ?></p>
                         <span class="product-price"><?php echo number_format($prodotto['prezzo'], 2, ',', ''); ?> €</span>
                     </div>
-                    <div class="product-action"><button class="add-to-cart-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>">AGGIUNGI</button></div>
+                    <div class="product-action"><button class="add-to-cart-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>" data-immagine="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>">AGGIUNGI</button></div>
                 </div>
             <?php endforeach; ?>
         </section>
-
         <section id="componi" class="product-category">
             <h2>Componi il tuo Panino</h2>
             <?php foreach ($prodotti_per_categoria['panino_componibile'] ?? [] as $prodotto):
@@ -143,12 +132,11 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
                         <span class="product-price"><?php echo number_format($prodotto['prezzo'], 2, ',', ''); ?> €</span>
                     </div>
                     <div class="product-action">
-                        <button class="open-overlay-btn" data-limite-pane="<?php echo $limiti['pane']; ?>" data-limite-proteina="<?php echo $limiti['proteina']; ?>" data-limite-contorno="<?php echo $limiti['contorno']; ?>" data-limite-salsa="<?php echo $limiti['salsa']; ?>" data-nome-panino="<?php echo htmlspecialchars(str_replace(' (base)', '', $prodotto['nome'])); ?>">SCEGLI</button>
+                        <button class="open-overlay-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>" data-limite-pane="<?php echo $limiti['pane']; ?>" data-limite-proteina="<?php echo $limiti['proteina']; ?>" data-limite-contorno="<?php echo $limiti['contorno']; ?>" data-limite-salsa="<?php echo $limiti['salsa']; ?>" data-nome-panino="<?php echo htmlspecialchars(str_replace(' (base)', '', $prodotto['nome'])); ?>" data-immagine="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>">SCEGLI</button>
                     </div>
                 </div>
             <?php endforeach; ?>
         </section>
-
         <section id="bevande" class="product-category">
             <h2>Bevande</h2>
             <?php foreach ($prodotti_per_categoria['bevanda'] ?? [] as $prodotto): ?>
@@ -159,66 +147,69 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
                         <p><?php echo htmlspecialchars($prodotto['descrizione'] ?? ''); ?></p>
                         <span class="product-price"><?php echo number_format($prodotto['prezzo'], 2, ',', ''); ?> €</span>
                     </div>
-                    <div class="product-action"><button class="add-to-cart-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>">AGGIUNGI</button></div>
+                    <div class="product-action"><button class="add-to-cart-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>" data-immagine="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>">AGGIUNGI</button></div>
                 </div>
             <?php endforeach; ?>
         </section>
-    </main>
-
+    </div>
     <aside class="cart-container">
-        <div class="cart-card">
-            <h3>Riepilogo Ordine</h3>
-            <ul id="cart-items-list" class="cart-items-list">
-                <li class="empty-cart-message">Il carrello è vuoto</li>
-            </ul>
-            <div class="cart-summary">
-                <div class="summary-delivery">
-                    <p><strong>Giorno:</strong> <span id="summary-day"><?php echo $_SESSION['giorno_consegna']; ?></span></p>
-                    <p><strong>Orario:</strong> <span id="summary-time"><?php echo $_SESSION['fascia_oraria']; ?></span></p>
+        <form action="checkout.php" method="POST" id="cart-form">
+            <div class="cart-card">
+                <h3>Riepilogo Ordine</h3>
+                <ul id="cart-items-list" class="cart-items-list">
+                    <li class="empty-cart-message">Il carrello è vuoto</li>
+                </ul>
+                <div class="cart-summary">
+                    <div class="summary-delivery">
+                        <p><strong>Giorno:</strong> <span id="summary-day"><?php echo $_SESSION['giorno_consegna']; ?></span></p>
+                        <p><strong>Orario:</strong> <span id="summary-time">Nessuna</span></p>
+                    </div>
+                    <div class="summary-total"><span>Totale</span><span id="summary-total-price">0,00 €</span></div>
+                    <button type="submit" class="btn-checkout" disabled>Vai al Checkout</button>
                 </div>
-                <div class="summary-total"><span>Totale</span><span id="summary-total-price">0,00 €</span></div>
-                <button class="btn-checkout" disabled>Vai al Checkout</button>
             </div>
-        </div>
+            <input type="hidden" name="cart_data" id="cart_data_input">
+            <input type="hidden" name="delivery_day" id="delivery_day_input">
+            <input type="hidden" name="delivery_time" id="delivery_time_input">
+        </form>
     </aside>
-</div>
-
+</main>
 <div id="componi-panino-overlay" class="overlay-container">
     <div class="overlay-content">
         <button id="close-overlay-btn" class="close-btn">&times;</button>
         <h3 id="overlay-title">Componi il tuo Panino</h3>
+        <p id="overlay-description" class="overlay-subtitle"></p>
         <div class="ingredient-picker">
             <div class="ingredient-category" data-categoria="pane">
                 <h4>Scegli il Pane <span class="required-badge">1 Obbligatorio</span></h4>
                 <?php foreach ($ingredienti_per_categoria['pane'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="radio" name="pane"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option"><input type="radio" name="pane" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
             <div class="ingredient-category" data-categoria="proteina">
                 <h4 id="proteina-title">Scegli la Proteina</h4>
                 <?php foreach ($ingredienti_per_categoria['proteina'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="proteina[]"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option"><input type="checkbox" name="proteina[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
             <div class="ingredient-category" data-categoria="contorno">
                 <h4 id="contorno-title">Scegli il Contorno</h4>
                 <?php foreach ($ingredienti_per_categoria['contorno'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="contorno[]"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option"><input type="checkbox" name="contorno[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
             <div class="ingredient-category" data-categoria="salsa">
                 <h4 id="salsa-title">Scegli la Salsa</h4>
                 <?php foreach ($ingredienti_per_categoria['salsa'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="salsa[]"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option"><input type="checkbox" name="salsa[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
         </div>
         <div class="overlay-footer">
             <div class="quantity-selector"><button type="button">-</button><span>1</span><button type="button">+</button></div>
-            <button class="btn-submit">Aggiungi al Carrello</button>
+            <button id="add-custom-panino-btn" class="btn-submit" disabled>Aggiungi al Carrello</button>
         </div>
     </div>
 </div>
-
-<script src="js/menu.js"></script>
+<script src="js/menu.js" defer></script>
 <?php include_once __DIR__ . '/../templates/footer.php'; ?>
