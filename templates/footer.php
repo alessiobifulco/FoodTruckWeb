@@ -1,3 +1,4 @@
+</main>
 <footer class="site-footer">
     <div class="footer-top">
         <a href="#">Chi Siamo</a>

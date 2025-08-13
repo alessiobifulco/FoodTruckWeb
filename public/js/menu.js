@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // ELEMENTI DELLA PAGINA
+    // --- ELEMENTI DELLA PAGINA ---
     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+    const openOverlayButtons = document.querySelectorAll('.open-overlay-btn');
     const menuCartList = document.getElementById('cart-items-list');
     const summaryTotalPrice = document.getElementById('summary-total-price');
     const checkoutButton = document.querySelector('.btn-checkout');
@@ -11,12 +12,28 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.querySelector('.search-bar-container input');
     const cartForm = document.getElementById('cart-form');
 
-    // STATO LOCALE DELLA PAGINA
-    let cart = [];
-    let isTimeSlotSelected = document.querySelector('.time-slot-btn.active') !== null;
+    // --- ELEMENTI DELL'OVERLAY ---
+    const overlay = document.getElementById('componi-panino-overlay');
+    const closeOverlayButton = document.getElementById('close-overlay-btn');
+    const addCustomPaninoBtn = document.getElementById('add-custom-panino-btn');
+    const ingredientPicker = document.querySelector('.ingredient-picker');
+    const overlayTitle = document.getElementById('overlay-title');
+    const overlayDescription = document.getElementById('overlay-description');
 
-    // FUNZIONE PER AGGIORNARE IL RIQUADRO DEL CARRELLO
+    // --- STATO LOCALE DELLA PAGINA ---
+    let cart = JSON.parse(sessionStorage.getItem('foodTruckCart')) || [];
+    let isTimeSlotSelected = document.querySelector('.time-slot-btn.active') !== null;
+    let limitiSelezione = {};
+    let paninoBase = {};
+
+    // --- FUNZIONI ---
+    function saveCartState() {
+        sessionStorage.setItem('foodTruckCart', JSON.stringify(cart));
+    }
+
     function updateCartView() {
+        if (!menuCartList) return;
+
         menuCartList.innerHTML = '';
         if (cart.length === 0) {
             menuCartList.innerHTML = '<li class="empty-cart-message">Il carrello è vuoto</li>';
@@ -35,7 +52,24 @@ document.addEventListener('DOMContentLoaded', function () {
         checkoutButton.disabled = !(cart.length > 0 && isTimeSlotSelected);
     }
 
-    // EVENT LISTENER PER AGGIUNGERE PRODOTTI
+    function validateOverlaySelections() {
+        const paneSelezionato = ingredientPicker.querySelector('input[name="pane"]:checked');
+        const proteineSelezionate = ingredientPicker.querySelectorAll('input[name="proteina[]"]:checked').length;
+        const proteineRichieste = limitiSelezione.proteina || 0;
+        addCustomPaninoBtn.disabled = !(paneSelezionato && proteineSelezionate === proteineRichieste);
+    }
+
+    const closeOverlay = () => {
+        if (!overlay) return;
+        overlay.style.display = 'none';
+        document.body.classList.remove('overlay-open');
+        ingredientPicker.querySelectorAll('input').forEach(input => {
+            input.checked = false;
+            input.disabled = false;
+        });
+    };
+
+    // --- EVENT LISTENERS ---
     addToCartButtons.forEach(button => {
         button.addEventListener('click', () => {
             const product = {
@@ -45,20 +79,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 immagine: button.closest('.product-item').querySelector('.product-item-image').getAttribute('src')
             };
             cart.push(product);
+            saveCartState();
             updateCartView();
         });
     });
 
-    // EVENT LISTENER PER RIMUOVERE PRODOTTI
-    menuCartList.addEventListener('click', function (event) {
-        if (event.target.classList.contains('remove-item-btn')) {
-            const indexToRemove = parseInt(event.target.dataset.index);
-            cart.splice(indexToRemove, 1);
-            updateCartView();
-        }
-    });
+    if (menuCartList) {
+        menuCartList.addEventListener('click', function (event) {
+            if (event.target.classList.contains('remove-item-btn')) {
+                const indexToRemove = parseInt(event.target.dataset.index);
+                cart.splice(indexToRemove, 1);
+                saveCartState();
+                updateCartView();
+            }
+        });
+    }
 
-    // EVENT LISTENER PER SELEZIONE ORARIO
     timeSlotButtons.forEach(button => {
         button.addEventListener('click', function () {
             timeSlotButtons.forEach(btn => btn.classList.remove('active'));
@@ -71,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // GESTIONE INVIO FORM CARRELLO
     if (cartForm) {
         cartForm.addEventListener('submit', function (event) {
             document.getElementById('cart_data_input').value = JSON.stringify(cart);
@@ -80,55 +115,25 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // LOGICA OVERLAY "COMPONI PANINO"
-    const overlay = document.getElementById('componi-panino-overlay');
-    const openOverlayButtons = document.querySelectorAll('.open-overlay-btn');
-    const closeOverlayButton = document.getElementById('close-overlay-btn');
-    const addCustomPaninoBtn = document.getElementById('add-custom-panino-btn');
-    const ingredientPicker = document.querySelector('.ingredient-picker');
-    let limitiSelezione = {};
-    let paninoBase = {};
-
-    function validateOverlaySelections() {
-        const paneSelezionato = ingredientPicker.querySelector('input[name="pane"]:checked');
-        const proteineSelezionate = ingredientPicker.querySelectorAll('input[name="proteina[]"]:checked').length;
-        const proteineRichieste = limitiSelezione.proteina || 0;
-        addCustomPaninoBtn.disabled = !(paneSelezionato && proteineSelezionate === proteineRichieste);
-    }
-
     if (overlay) {
         openOverlayButtons.forEach(button => {
             button.addEventListener('click', () => {
-                paninoBase = {
-                    id: button.dataset.id,
-                    nome: button.dataset.nomePanino,
-                    prezzo: parseFloat(button.dataset.prezzo),
-                    immagine: button.dataset.immagine
-                };
-                limitiSelezione = {
-                    proteina: parseInt(button.dataset.limiteProteina),
-                    contorno: parseInt(button.dataset.limiteContorno),
-                    salsa: parseInt(button.dataset.limiteSalsa),
-                };
-
-                document.getElementById('overlay-title').textContent = paninoBase.nome;
-                document.getElementById('overlay-description').textContent = button.closest('.product-item').querySelector('p').textContent;
+                paninoBase = { id: button.dataset.id, nome: button.dataset.nomePanino, prezzo: parseFloat(button.dataset.prezzo), immagine: button.dataset.immagine };
+                limitiSelezione = { proteina: parseInt(button.dataset.limiteProteina), contorno: parseInt(button.dataset.limiteContorno), salsa: parseInt(button.dataset.limiteSalsa) };
+                overlayTitle.textContent = paninoBase.nome;
+                overlayDescription.textContent = button.closest('.product-item').querySelector('p').textContent;
                 document.getElementById('proteina-title').innerHTML = `Scegli la Proteina <span class="required-badge">${limitiSelezione.proteina} Obbligatori</span>`;
                 document.getElementById('contorno-title').innerHTML = `Scegli il Contorno <span class="required-badge">${limitiSelezione.contorno} Opzionali</span>`;
                 document.getElementById('salsa-title').innerHTML = `Scegli la Salsa <span class="required-badge">${limitiSelezione.salsa} Opzionali</span>`;
-
                 validateOverlaySelections();
                 overlay.style.display = 'flex';
                 document.body.classList.add('overlay-open');
             });
         });
-        const closeOverlay = () => {
-            overlay.style.display = 'none';
-            document.body.classList.remove('overlay-open');
-            ingredientPicker.querySelectorAll('input').forEach(input => { input.checked = false; input.disabled = false; });
-        };
+
         closeOverlayButton.addEventListener('click', closeOverlay);
         overlay.addEventListener('click', (event) => { if (event.target === overlay) closeOverlay(); });
+
         ingredientPicker.addEventListener('change', (event) => {
             if (event.target.type === 'checkbox') {
                 const categoriaDiv = event.target.closest('.ingredient-category');
@@ -140,6 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             validateOverlaySelections();
         });
+
         addCustomPaninoBtn.addEventListener('click', () => {
             let ingredientiNomi = [];
             ingredientPicker.querySelectorAll('input:checked').forEach(input => {
@@ -156,11 +162,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 immagine: paninoBase.immagine
             };
             cart.push(paninoPersonalizzato);
+            saveCartState();
             updateCartView();
             closeOverlay();
         });
     }
 
-    // Inizializzazione al caricamento della pagina
     updateCartView();
 });

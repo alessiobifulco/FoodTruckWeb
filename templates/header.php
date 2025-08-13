@@ -3,7 +3,6 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 $is_logged_in = isset($_SESSION['user_id']);
-$cart_items_count = $_SESSION['cart_count'] ?? 0;
 $page_title = $page_title ?? 'Food Truck App';
 ?>
 <!DOCTYPE html>
@@ -31,25 +30,20 @@ $page_title = $page_title ?? 'Food Truck App';
             <div class="header-right">
                 <?php if ($is_logged_in): ?>
                     <div class="user-menu-container">
-                        <a href="account.php" aria-label="Profilo Utente">
-                            <i class="fas fa-user-circle"></i>
-                        </a>
+                        <a href="account.php" aria-label="Profilo Utente"><i class="fas fa-user-circle"></i></a>
                         <div class="user-dropdown">
                             <a href="account.php">Il Mio Account</a>
                             <a href="logout.php">Disconnetti</a>
                         </div>
                     </div>
-                    <a href="cart.php" aria-label="Carrello">
+                    <a href="checkout.php" aria-label="Carrello">
                         <i class="fas fa-shopping-cart"></i>
                     </a>
                 <?php else: ?>
-                    <a href="login.php" aria-label="Accedi o Registrati">
-                        <i class="fas fa-user-circle"></i>
-                    </a>
-                    <a href="login.php" aria-label="Carrello">
-                        <i class="fas fa-shopping-cart"></i>
-                    </a>
+                    <a href="login.php" aria-label="Accedi o Registrati"><i class="fas fa-user-circle"></i></a>
+                    <a href="login.php" aria-label="Carrello"><i class="fas fa-shopping-cart"></i></a>
                 <?php endif; ?>
             </div>
         </nav>
     </header>
+    <main>

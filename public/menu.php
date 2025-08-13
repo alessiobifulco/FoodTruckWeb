@@ -13,7 +13,6 @@ if (!isset($_SESSION['user_id'])) {
 $page_title = "Il Nostro Menu";
 include_once __DIR__ . '/../templates/header.php';
 
-// --- LOGICA PER GIORNO E FASCE ORARIE ---
 $selected_day = $_GET['day'] ?? 'today';
 if ($selected_day === 'tomorrow') {
     $selected_date_obj = new DateTime('tomorrow');
@@ -36,7 +35,6 @@ if ($giorno_settimana_db) {
     $stmt->close();
 }
 
-// --- LOGICA PER PRODOTTI E INGREDIENTI ---
 $prodotti_per_categoria = [];
 $sql_prodotti = "SELECT * FROM Prodotti WHERE disponibile = TRUE ORDER BY FIELD(categoria, 'panino_predefinito', 'pizzetta', 'panino_componibile', 'bevanda')";
 $result_prodotti = $conn->query($sql_prodotti);
@@ -58,7 +56,7 @@ $_SESSION['giorno_consegna'] = $selected_day === 'today' ? 'Oggi' : 'Domani';
 $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
 ?>
 <link rel="stylesheet" href="css/menu.css">
-<main class="menu-page-container">
+<div class="menu-page-container">
     <div class="product-list-container">
         <section class="time-selection-menu">
             <h3>Scegli Giorno e Ora di Consegna</h3>
@@ -173,43 +171,43 @@ $_SESSION['fascia_oraria'] = $_SESSION['fascia_oraria'] ?? 'Nessuna';
             <input type="hidden" name="delivery_time" id="delivery_time_input">
         </form>
     </aside>
-</main>
-<div id="componi-panino-overlay" class="overlay-container">
-    <div class="overlay-content">
-        <button id="close-overlay-btn" class="close-btn">&times;</button>
-        <h3 id="overlay-title">Componi il tuo Panino</h3>
-        <p id="overlay-description" class="overlay-subtitle"></p>
-        <div class="ingredient-picker">
-            <div class="ingredient-category" data-categoria="pane">
-                <h4>Scegli il Pane <span class="required-badge">1 Obbligatorio</span></h4>
-                <?php foreach ($ingredienti_per_categoria['pane'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="radio" name="pane" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
-                <?php endforeach; ?>
+    </main>
+    <div id="componi-panino-overlay" class="overlay-container">
+        <div class="overlay-content">
+            <button id="close-overlay-btn" class="close-btn">&times;</button>
+            <h3 id="overlay-title">Componi il tuo Panino</h3>
+            <p id="overlay-description" class="overlay-subtitle"></p>
+            <div class="ingredient-picker">
+                <div class="ingredient-category" data-categoria="pane">
+                    <h4>Scegli il Pane <span class="required-badge">1 Obbligatorio</span></h4>
+                    <?php foreach ($ingredienti_per_categoria['pane'] ?? [] as $ingrediente): ?>
+                        <label class="ingredient-option"><input type="radio" name="pane" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <?php endforeach; ?>
+                </div>
+                <div class="ingredient-category" data-categoria="proteina">
+                    <h4 id="proteina-title">Scegli la Proteina</h4>
+                    <?php foreach ($ingredienti_per_categoria['proteina'] ?? [] as $ingrediente): ?>
+                        <label class="ingredient-option"><input type="checkbox" name="proteina[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <?php endforeach; ?>
+                </div>
+                <div class="ingredient-category" data-categoria="contorno">
+                    <h4 id="contorno-title">Scegli il Contorno</h4>
+                    <?php foreach ($ingredienti_per_categoria['contorno'] ?? [] as $ingrediente): ?>
+                        <label class="ingredient-option"><input type="checkbox" name="contorno[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <?php endforeach; ?>
+                </div>
+                <div class="ingredient-category" data-categoria="salsa">
+                    <h4 id="salsa-title">Scegli la Salsa</h4>
+                    <?php foreach ($ingredienti_per_categoria['salsa'] ?? [] as $ingrediente): ?>
+                        <label class="ingredient-option"><input type="checkbox" name="salsa[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <?php endforeach; ?>
+                </div>
             </div>
-            <div class="ingredient-category" data-categoria="proteina">
-                <h4 id="proteina-title">Scegli la Proteina</h4>
-                <?php foreach ($ingredienti_per_categoria['proteina'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="proteina[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
-                <?php endforeach; ?>
+            <div class="overlay-footer">
+                <div class="quantity-selector"><button type="button">-</button><span>1</span><button type="button">+</button></div>
+                <button id="add-custom-panino-btn" class="btn-submit" disabled>Aggiungi al Carrello</button>
             </div>
-            <div class="ingredient-category" data-categoria="contorno">
-                <h4 id="contorno-title">Scegli il Contorno</h4>
-                <?php foreach ($ingredienti_per_categoria['contorno'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="contorno[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
-                <?php endforeach; ?>
-            </div>
-            <div class="ingredient-category" data-categoria="salsa">
-                <h4 id="salsa-title">Scegli la Salsa</h4>
-                <?php foreach ($ingredienti_per_categoria['salsa'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="salsa[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
-                <?php endforeach; ?>
-            </div>
-        </div>
-        <div class="overlay-footer">
-            <div class="quantity-selector"><button type="button">-</button><span>1</span><button type="button">+</button></div>
-            <button id="add-custom-panino-btn" class="btn-submit" disabled>Aggiungi al Carrello</button>
         </div>
     </div>
-</div>
-<script src="js/menu.js" defer></script>
-<?php include_once __DIR__ . '/../templates/footer.php'; ?>
+    <script src="js/menu.js" defer></script>
+    <?php include_once __DIR__ . '/../templates/footer.php'; ?>
