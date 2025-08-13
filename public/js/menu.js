@@ -1,39 +1,28 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // --- ELEMENTI DELLA PAGINA ---
     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-    const openOverlayButtons = document.querySelectorAll('.open-overlay-btn');
     const menuCartList = document.getElementById('cart-items-list');
     const summaryTotalPrice = document.getElementById('summary-total-price');
     const checkoutButton = document.querySelector('.btn-checkout');
     const summaryDay = document.getElementById('summary-day');
     const summaryTime = document.getElementById('summary-time');
     const dayButtons = document.querySelectorAll('.day-selector-btn');
-    const timeSlotButtons = document.querySelectorAll('.time-slot-btn:not(.disabled)');
-    const searchInput = document.querySelector('.search-bar-container input');
+    const timeSlotButtons = document.querySelectorAll('.time-slot-btn');
     const cartForm = document.getElementById('cart-form');
 
-    // --- ELEMENTI DELL'OVERLAY ---
-    const overlay = document.getElementById('componi-panino-overlay');
-    const closeOverlayButton = document.getElementById('close-overlay-btn');
-    const addCustomPaninoBtn = document.getElementById('add-custom-panino-btn');
-    const ingredientPicker = document.querySelector('.ingredient-picker');
-    const overlayTitle = document.getElementById('overlay-title');
-    const overlayDescription = document.getElementById('overlay-description');
+    let cart = [];
+    if (typeof serverCart !== 'undefined' && serverCart !== null) {
+        cart = serverCart;
+    } else {
+        cart = JSON.parse(sessionStorage.getItem('foodTruckMenuCart')) || [];
+    }
 
-    // --- STATO LOCALE DELLA PAGINA ---
-    let cart = JSON.parse(sessionStorage.getItem('foodTruckCart')) || [];
     let isTimeSlotSelected = document.querySelector('.time-slot-btn.active') !== null;
-    let limitiSelezione = {};
-    let paninoBase = {};
 
-    // --- FUNZIONI ---
-    function saveCartState() {
-        sessionStorage.setItem('foodTruckCart', JSON.stringify(cart));
+    function saveCartToSessionStorage() {
+        sessionStorage.setItem('foodTruckMenuCart', JSON.stringify(cart));
     }
 
     function updateCartView() {
-        if (!menuCartList) return;
-
         menuCartList.innerHTML = '';
         if (cart.length === 0) {
             menuCartList.innerHTML = '<li class="empty-cart-message">Il carrello è vuoto</li>';
@@ -52,24 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
         checkoutButton.disabled = !(cart.length > 0 && isTimeSlotSelected);
     }
 
-    function validateOverlaySelections() {
-        const paneSelezionato = ingredientPicker.querySelector('input[name="pane"]:checked');
-        const proteineSelezionate = ingredientPicker.querySelectorAll('input[name="proteina[]"]:checked').length;
-        const proteineRichieste = limitiSelezione.proteina || 0;
-        addCustomPaninoBtn.disabled = !(paneSelezionato && proteineSelezionate === proteineRichieste);
-    }
-
-    const closeOverlay = () => {
-        if (!overlay) return;
-        overlay.style.display = 'none';
-        document.body.classList.remove('overlay-open');
-        ingredientPicker.querySelectorAll('input').forEach(input => {
-            input.checked = false;
-            input.disabled = false;
-        });
-    };
-
-    // --- EVENT LISTENERS ---
     addToCartButtons.forEach(button => {
         button.addEventListener('click', () => {
             const product = {
@@ -79,24 +50,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 immagine: button.closest('.product-item').querySelector('.product-item-image').getAttribute('src')
             };
             cart.push(product);
-            saveCartState();
+            saveCartToSessionStorage();
             updateCartView();
         });
     });
 
-    if (menuCartList) {
-        menuCartList.addEventListener('click', function (event) {
-            if (event.target.classList.contains('remove-item-btn')) {
-                const indexToRemove = parseInt(event.target.dataset.index);
-                cart.splice(indexToRemove, 1);
-                saveCartState();
-                updateCartView();
+    menuCartList.addEventListener('click', function (event) {
+        if (event.target.classList.contains('remove-item-btn')) {
+            const indexToRemove = parseInt(event.target.dataset.index);
+            cart.splice(indexToRemove, 1);
+            saveCartToSessionStorage();
+            updateCartView();
+        }
+    });
+
+    dayButtons.forEach(button => {
+        button.addEventListener('click', function (e) {
+            const activeTimeSlot = document.querySelector('.time-slot-btn.active');
+            if (activeTimeSlot) {
+                e.preventDefault();
+                const newUrl = this.href + '&time=' + encodeURIComponent(activeTimeSlot.dataset.timeslot);
+                window.location.href = newUrl;
             }
         });
-    }
+    });
 
     timeSlotButtons.forEach(button => {
         button.addEventListener('click', function () {
+            if (this.classList.contains('disabled')) return;
             timeSlotButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             isTimeSlotSelected = true;
@@ -115,13 +96,38 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Logica Overlay
+    const overlay = document.getElementById('componi-panino-overlay');
     if (overlay) {
+        const openOverlayButtons = document.querySelectorAll('.open-overlay-btn');
+        const closeOverlayButton = document.getElementById('close-overlay-btn');
+        const addCustomPaninoBtn = document.getElementById('add-custom-panino-btn');
+        const ingredientPicker = document.querySelector('.ingredient-picker');
+        let limitiSelezione = {};
+        let paninoBase = {};
+
+        function validateOverlaySelections() {
+            const paneSelezionato = ingredientPicker.querySelector('input[name="pane"]:checked');
+            const proteineSelezionate = ingredientPicker.querySelectorAll('input[name="proteina[]"]:checked').length;
+            const proteineRichieste = limitiSelezione.proteina || 0;
+            addCustomPaninoBtn.disabled = !(paneSelezionato && proteineSelezionate === proteineRichieste);
+        }
+
+        const closeOverlay = () => {
+            overlay.style.display = 'none';
+            document.body.classList.remove('overlay-open');
+            ingredientPicker.querySelectorAll('input').forEach(input => {
+                input.checked = false;
+                input.disabled = false;
+            });
+        };
+
         openOverlayButtons.forEach(button => {
             button.addEventListener('click', () => {
                 paninoBase = { id: button.dataset.id, nome: button.dataset.nomePanino, prezzo: parseFloat(button.dataset.prezzo), immagine: button.dataset.immagine };
                 limitiSelezione = { proteina: parseInt(button.dataset.limiteProteina), contorno: parseInt(button.dataset.limiteContorno), salsa: parseInt(button.dataset.limiteSalsa) };
-                overlayTitle.textContent = paninoBase.nome;
-                overlayDescription.textContent = button.closest('.product-item').querySelector('p').textContent;
+                document.getElementById('overlay-title').textContent = paninoBase.nome;
+                document.getElementById('overlay-description').textContent = button.closest('.product-item').querySelector('p').textContent;
                 document.getElementById('proteina-title').innerHTML = `Scegli la Proteina <span class="required-badge">${limitiSelezione.proteina} Obbligatori</span>`;
                 document.getElementById('contorno-title').innerHTML = `Scegli il Contorno <span class="required-badge">${limitiSelezione.contorno} Opzionali</span>`;
                 document.getElementById('salsa-title').innerHTML = `Scegli la Salsa <span class="required-badge">${limitiSelezione.salsa} Opzionali</span>`;
@@ -141,7 +147,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const limite = limitiSelezione[categoria];
                 const checkedInputs = categoriaDiv.querySelectorAll('input[type="checkbox"]:checked');
                 const uncheckedInputs = categoriaDiv.querySelectorAll('input[type="checkbox"]:not(:checked)');
-                if (checkedInputs.length >= limite) { uncheckedInputs.forEach(input => input.disabled = true); } else { uncheckedInputs.forEach(input => input.disabled = false); }
+                if (checkedInputs.length >= limite) {
+                    uncheckedInputs.forEach(input => input.disabled = true);
+                } else {
+                    uncheckedInputs.forEach(input => input.disabled = false);
+                }
             }
             validateOverlaySelections();
         });
