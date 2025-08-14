@@ -1,0 +1,132 @@
+/* =================================
+   Stili Pagina Contatti (contacts.css)
+==================================== */
+
+.contact-page-wrapper {
+    /* IMMAGINE DI SFONDO AGGIUNTA QUI */
+    background-image: url('../img/contacts.png');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    padding: 60px 20px;
+}
+
+.contact-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    /* Sfondo bianco semi-trasparente */
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.contact-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.contact-subtitle {
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+    color: #666;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Stili per il Form (precedentemente in home.css) */
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+.contact-form .btn-submit {
+    background-color: #343a40;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-self: center;
+}
+
+.contact-form .btn-submit:hover {
+    background-color: #555;
+}
+
+/* Stili per la sezione Telefono */
+.contact-alternative {
+    text-align: center;
+    margin-top: 60px;
+    padding: 30px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contact-alternative i {
+    font-size: 2rem;
+    color: #343a40;
+    margin-bottom: 15px;
+}
+
+.contact-alternative h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    margin: 0 0 10px 0;
+}
+
+.contact-alternative p {
+    margin: 0 0 15px 0;
+}
+
+.phone-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.phone-number:hover {
+    text-decoration: underline;
+}
+
+/* Stili per la sezione "Dove trovarci" */
+.contact-location-info {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.contact-location-info h2 {
+    font-size: 1.8rem;
+}
+
+.contact-location-info p {
+    font-size: 1.1rem;
+}

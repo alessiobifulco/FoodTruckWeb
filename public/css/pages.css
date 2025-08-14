@@ -1,0 +1,132 @@
+/* =================================
+   Stili per Pagine Statiche (pages.css)
+==================================== */
+
+.static-page-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 1rem;
+    line-height: 1.6;
+}
+
+.static-page-container h1,
+.static-page-container h2 {
+    font-family: 'Oswald', sans-serif;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 2rem;
+}
+
+.static-page-container h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    border-bottom: 2px solid #333;
+    margin-bottom: 2rem;
+}
+
+.static-page-container a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.static-page-container a:hover {
+    text-decoration: underline;
+}
+
+/* Stili per la pagina "Chi Siamo" */
+.about-hero {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.about-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.about-hero-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.about-hero-title h1 {
+    font-size: 5rem;
+    margin: 0;
+    border: none;
+}
+
+.about-hero-title p {
+    font-size: 1.5rem;
+    max-width: 700px;
+    margin: 1rem 0;
+}
+
+.about-content-wrapper {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 4rem 2rem;
+}
+
+.about-inner-content {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.about-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.about-section.reverse {
+    flex-wrap: wrap-reverse;
+}
+
+.about-text,
+.about-image {
+    flex: 1;
+    min-width: 300px;
+}
+
+.about-image img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.about-text p,
+.about-text ul {
+    font-size: 1rem;
+    text-align: justify;
+}
+
+.about-text ul {
+    list-style: none;
+    padding: 0;
+}
+
+.about-text li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.community-section {
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-top: 4rem;
+}

@@ -1,10 +1,11 @@
 </main>
+
 <footer class="site-footer">
     <div class="footer-top">
-        <a href="#">Chi Siamo</a>
-        <a href="#">Contatti</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Termini e Condizioni</a>
+        <a href="whoweare.php">Chi Siamo</a>
+        <a href="contacts.php">Contatti</a>
+        <a href="privacy.php">Privacy Policy</a>
+        <a href="terms.php">Termini e Condizioni</a>
     </div>
     <div class="footer-bottom">
         <span>Copyright &copy; <?php echo date('Y'); ?> Food Truck. All Rights Reserved.</span>
@@ -16,6 +17,8 @@
         </div>
     </div>
 </footer>
+
+<script src="js/app.js" defer></script>
 </body>
 
 </html>
