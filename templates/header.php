@@ -36,9 +36,15 @@ $page_title = $page_title ?? 'Food Truck App';
                             <a href="logout.php">Disconnetti</a>
                         </div>
                     </div>
-                    <a href="checkout.php" aria-label="Carrello">
-                        <i class="fas fa-shopping-cart"></i>
-                    </a>
+                    <div class="header-cart-container">
+                        <a href="checkout.php" class="header-icon-link" aria-label="Carrello">
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                        <div class="header-cart-preview">
+                            <ul class="preview-item-list">
+                            </ul>
+                        </div>
+                    </div>
                 <?php else: ?>
                     <a href="login.php" aria-label="Accedi o Registrati"><i class="fas fa-user-circle"></i></a>
                     <a href="login.php" aria-label="Carrello"><i class="fas fa-shopping-cart"></i></a>

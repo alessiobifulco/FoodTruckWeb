@@ -53,6 +53,10 @@
     color: #c5a9ff;
 }
 
+.header-icon-link {
+    position: relative;
+}
+
 .header-left i {
     font-size: 2.2rem;
 }
@@ -67,7 +71,7 @@
     font-size: 1.9rem;
 }
 
-/* Stili per Menu a Tendina Utente */
+/* Stili Menu a Tendina Utente */
 .user-menu-container {
     position: relative;
 }
@@ -100,4 +104,54 @@
 
 .user-dropdown a:hover {
     background-color: #f8f9fa;
+}
+
+/* Stili Anteprima Carrello */
+.header-cart-container {
+    position: relative;
+}
+
+.header-cart-preview {
+    display: none;
+    position: absolute;
+    top: 110%;
+    right: 0;
+    width: 280px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    z-index: 101;
+    padding: 15px;
+    color: #333;
+    border: 1px solid #eee;
+}
+
+.header-cart-container:hover .header-cart-preview {
+    display: block;
+}
+
+.preview-item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.preview-item-list li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.preview-item-list li:last-child {
+    border-bottom: none;
+}
+
+.preview-empty-message {
+    color: #888;
+    text-align: center;
+    padding: 20px 0;
 }
