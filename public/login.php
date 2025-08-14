@@ -8,6 +8,7 @@ require_once __DIR__ . '/../config/db.php';
 $page_title = "Accedi o Registrati";
 $error_message = '';
 $success_message = '';
+$form_to_display = 'login'; // Di default mostra il form di login
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['login_submit'])) {
@@ -37,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
         }
     } elseif (isset($_POST['register_submit'])) {
+        $form_to_display = 'register'; // Se c'è un errore, rimani su questa scheda
         $email_reg = trim($_POST['email_reg']);
         $password_reg = $_POST['password_reg'];
         $confirm_password_reg = $_POST['confirm_password_reg'];
@@ -104,7 +106,7 @@ include_once __DIR__ . '/../templates/header.php';
                 <h2 class="form-title">Crea un nuovo account</h2>
                 <div class="form-group">
                     <label for="register-email">Email</label>
-                    <input type="email" id="register-email" name="email_reg" required>
+                    <input type="email" id="register-email" name="email_reg" required value="<?php echo isset($email_reg) ? htmlspecialchars($email_reg) : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label for="register-password">Password</label>
@@ -125,4 +127,7 @@ include_once __DIR__ . '/../templates/header.php';
 </main>
 
 <?php include_once __DIR__ . '/../templates/footer.php'; ?>
+<script>
+    const formToDisplay = '<?php echo $form_to_display; ?>';
+</script>
 <script src="js/login.js"></script>
