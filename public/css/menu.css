@@ -244,26 +244,54 @@
     padding: 20px 0;
 }
 
+/* MODIFICHE PER ALLINEAMENTO CARRELLO */
 .cart-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 12px 0;
     font-size: 0.9rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
 }
 
 .cart-item-name {
+    flex-grow: 1;
+    padding-right: 10px;
+    font-weight: bold;
+}
+
+.cart-item-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.cart-item-price {
+    width: 60px;
+    /* Larghezza fissa per allineare i prezzi */
+    text-align: right;
     font-weight: bold;
 }
 
 .remove-item-btn {
     background: none;
     border: none;
-    color: red;
+    color: #dc3545;
     cursor: pointer;
-    font-size: 1.2rem;
-    padding: 0 5px;
+    font-size: 1.4rem;
+    padding: 0 0 0 10px;
+    line-height: 1;
 }
+
+.remove-item-btn:hover {
+    color: #a71d2a;
+}
+
+/* FINE MODIFICHE */
 
 .cart-summary {
     margin-top: 20px;

@@ -13,7 +13,6 @@ if (!isset($_SESSION['user_id'])) {
 $page_title = "Il Nostro Menu";
 include_once __DIR__ . '/../templates/header.php';
 
-// --- LOGICA PER GIORNO E FASCE ORARIE ---
 $selected_day = $_GET['day'] ?? ($_SESSION['delivery_day'] ?? 'today');
 $selected_time = $_GET['time'] ?? ($_SESSION['delivery_time'] ?? null);
 
@@ -39,7 +38,6 @@ if ($giorno_settimana_db) {
     $stmt->close();
 }
 
-// --- LOGICA PER PRODOTTI E INGREDIENTI ---
 $prodotti_per_categoria = [];
 $sql_prodotti = "SELECT * FROM Prodotti WHERE disponibile = TRUE ORDER BY FIELD(categoria, 'panino_predefinito', 'pizzetta', 'panino_componibile', 'bevanda')";
 $result_prodotti = $conn->query($sql_prodotti);
@@ -58,12 +56,10 @@ if ($result_ingredienti) {
     }
 }
 
-// Aggiorna la sessione con i valori correnti per il riepilogo
 $_SESSION['delivery_day'] = $selected_day === 'today' ? 'Oggi' : 'Domani';
 $_SESSION['delivery_time'] = $selected_time ?? 'Nessuna';
 ?>
 <link rel="stylesheet" href="css/menu.css">
-
 <main class="menu-page-container">
     <div class="product-list-container">
         <section class="time-selection-menu">
