@@ -21,6 +21,7 @@
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
+    box-sizing: border-box;
 }
 
 .hero-main-title {
@@ -38,6 +39,7 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     max-width: 550px;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .promo-list {
@@ -107,8 +109,7 @@
 }
 
 .products-scroller {
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 100%;
     overflow: hidden;
     -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
     mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
@@ -181,10 +182,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 80px;
     padding: 40px 0;
     margin-top: -20px;
     position: relative;
     z-index: 2;
+}
+
+.custom-order-card {
+    margin-bottom: 40px;
 }
 
 .custom-order-card,
@@ -196,11 +202,7 @@
     text-align: center;
     width: 100%;
     max-width: 450px;
-}
-
-/* MODIFICA: Aggiunto margine specifico per separare le card */
-.custom-order-card {
-    margin-bottom: 40px;
+    box-sizing: border-box;
 }
 
 .custom-order-card h3,
@@ -284,4 +286,68 @@
     margin-top: 40px;
     color: #666;
     font-size: 0.9rem;
+}
+
+/* Stili per la sezione telefono in contacts.php */
+.contact-alternative {
+    text-align: center;
+    margin-top: 60px;
+    padding: 30px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contact-alternative i {
+    font-size: 2rem;
+    color: #343a40;
+    margin-bottom: 15px;
+}
+
+.contact-alternative h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    margin: 0 0 10px 0;
+}
+
+.contact-alternative p {
+    margin: 0 0 15px 0;
+}
+
+.phone-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.phone-number:hover {
+    text-decoration: underline;
+}
+
+/* Stili per il Mobile */
+@media (max-width: 768px) {
+    .hero-main-title {
+        font-size: 3.5rem;
+    }
+
+    .hero-panel {
+        padding: 20px;
+    }
+
+    .menu-title,
+    .contact-title {
+        font-size: 2.2rem;
+    }
+
+    .menu-light-container {
+        /* Rimuoviamo il gap e usiamo margin per un controllo migliore su mobile */
+        gap: 0;
+    }
+
+    .custom-order-card {
+        margin-bottom: 40px;
+    }
 }
