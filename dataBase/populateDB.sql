@@ -33,20 +33,20 @@ INSERT INTO `Ingredienti` (`nome`, `categoria_ingrediente`, `disponibile`) VALUE
 -- Popolamento Prodotti
 INSERT INTO `Prodotti` (`nome`, `descrizione`, `prezzo`, `categoria`, `path_immagine`, `disponibile`) VALUES
 ('Panino con cotolettetta', 'pane arabo, cotoletta, insalata, maionese', 4.00, 'panino_predefinito', 'img/paninocotoletta.png', TRUE),
-('Panino con cotto', 'pane ciabatta, cotto, fontina', 3.50, 'panino_predefinito', 'img/panino-cotto.jpg', TRUE),
-('Panino con crudo', 'pane integrale, crudo, rucola, squacquerone', 4.00, 'panino_predefinito', 'img/panino-crudo.jpg', TRUE),
-('Panino Bresaola e Philadelphia', 'Pane al carbone con bresaola, pomodorini e Philadelphia', 5.00, 'panino_predefinito', 'img/panino-bresaola.jpg', TRUE),
-('Panino con Salame Nostrano', 'Pane rosetta con salame nostrano', 4.00, 'panino_predefinito', 'img/panino-salame.jpg', TRUE),
+('Panino con cotto', 'pane ciabatta, cotto, fontina', 3.50, 'panino_predefinito', 'img/paninocotto.png', TRUE),
+('Panino con crudo', 'pane integrale, crudo, rucola, squacquerone', 4.00, 'panino_predefinito', 'img/paninocrudo.png', TRUE),
+('Panino Bresaola e Philadelphia', 'Pane al carbone con bresaola, pomodorini e Philadelphia', 5.00, 'panino_predefinito', 'img/paninonero.png', TRUE),
+('Panino con Salame Nostrano', 'Pane rosetta con salame nostrano', 4.00, 'panino_predefinito', 'img/paninosalame.png', TRUE),
 ('Margherita', 'pomodoro, mozzarella', 2.50, 'pizzetta', 'img/pizzettamargherita.png', TRUE),
-('Pizzetta Salsiccia', 'pomodoro, mozzarella, salsiccia', 3.00, 'pizzetta', 'img/pizzetta-salsiccia.jpg', TRUE),
-('Pizzetta Wurstel e Patatine', 'pomodoro, mozzarella, patatine, wurstel', 3.00, 'pizzetta', 'img/pizzetta-wurstel.jpg', TRUE),
+('Pizzetta Salsiccia', 'pomodoro, mozzarella, salsiccia', 3.00, 'pizzetta', 'img/pizzettasalsiccia.png', TRUE),
+('Pizzetta Wurstel e Patatine', 'pomodoro, mozzarella, patatine, wurstel', 3.00, 'pizzetta', 'img/pizzettawurstel.png', TRUE),
 ('Pizzetta Rossa', 'pomodoro', 2.00, 'pizzetta', 'img/pizzetta-rossa.jpg', TRUE),
 ('Pizzetta Cotto', 'mozzarella, cotto', 2.50, 'pizzetta', 'img/pizzetta-cotto.jpg', TRUE),
-('Pizzetta Salame Piccante', 'Pomodoro, mozzarella e salame piccante', 3.50, 'pizzetta', 'img/pizzetta-salame-piccante.jpg', TRUE),
-('Focaccia con Olio e Sale', 'Semplice focaccia con olio extra vergine e sale', 2.50, 'pizzetta', 'img/focaccia.jpg', TRUE),
-('Acqua da 500ml', 'Acqua minerale naturale', 1.50, 'bevanda', 'img/acqua.jpg', TRUE),
-('Coca Cola lattina', 'Lattina 330ml', 2.50, 'bevanda', 'img/coca-cola.jpg', TRUE),
-('Succo cartone', 'Succo di frutta vari gusti (cartone 200ml)', 3.00, 'bevanda', 'img/succo.jpg', TRUE),
+('Pizzetta Salame Piccante', 'Pomodoro, mozzarella e salame piccante', 3.50, 'pizzetta', 'img/pizzettasalamepiccante.png', TRUE),
+('Focaccia con Olio e Sale', 'Semplice focaccia con olio extra vergine e sale', 2.50, 'pizzetta', 'img/focaccia.png', TRUE),
+('Acqua da 500ml', 'Acqua minerale naturale', 1.50, 'bevanda', 'img/acqua.png', TRUE),
+('Coca Cola lattina', 'Lattina 330ml', 2.50, 'bevanda', 'img/cocacola.png', TRUE),
+('Succo cartone', 'Succo di frutta vari gusti (cartone 200ml)', 3.00, 'bevanda', 'img/succo.png', TRUE),
 ('Panino Normale (base)', '1 pane, 1 proteina, 1 contorno, 1 salsa', 4.50, 'panino_componibile', 'img/paninocomponibile.png', TRUE),
 ('Panino Grande (base)', '1 pane, 1 proteina, 2 contorni, 2 salse', 5.50, 'panino_componibile', 'img/paninocomponibile.png', TRUE),
 ('Panino Maxi (base)', '1 pane, 2 proteine, 3 contorni, 2 salse', 7.00, 'panino_componibile', 'img/paninocomponibile.png', TRUE);
@@ -88,6 +88,5 @@ INSERT INTO `DettagliPaninoComposto` (`id_dettaglio_ordine`, `id_ingrediente`) V
 -- Popolamento Notifiche
 INSERT INTO `Notifiche` (`id_utente_destinatario`, `messaggio`, `tipo_notifica`, `id_ordine_riferimento`) VALUES
 (1, 'Il tuo ordine #00001 è stato ricevuto!', 'ordine_status', 1),
-(2, 'Il tuo ordine #00002 è stato consegnato. Grazie!', 'ordine_status', 2),
-(3, 'Hai ricevuto un nuovo ordine! #00001', 'nuovo_ordine_venditore', 1),
-(4, 'Benvenuto! Per te uno sconto del 5% sul tuo primo ordine!', 'sconto_benvenuto', NULL);
+(3, 'Il tuo ordine #00002 è stato consegnato. Grazie!', 'ordine_status', 2),
+(2, 'Hai ricevuto un nuovo ordine! #00001', 'nuovo_ordine_venditore', 1);
