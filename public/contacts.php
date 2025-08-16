@@ -10,9 +10,8 @@ $page_title = "Contatti - Food Truck";
 include_once __DIR__ . '/../templates/header.php';
 ?>
 <link rel="stylesheet" href="css/contacts.css">
-<link rel="stylesheet" href="css/home.css">
 <main>
-    <div class="contact-page-wrapper">
+    <div id="contact-form-section" class="contact-page-wrapper">
         <div class="contact-form-container">
 
             <h1 class="contact-title">Contattaci</h1>
@@ -20,7 +19,14 @@ include_once __DIR__ . '/../templates/header.php';
                 Hai domande, suggerimenti o hai bisogno di assistenza con un ordine? Compila il modulo qui sotto e ti risponderemo il prima possibile.
             </p>
 
-            <form action="#" method="POST" class="contact-form">
+            <?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
+                <div class="message success-message">Messaggio inviato con successo! Ti risponderemo il prima possibile.</div>
+            <?php elseif (isset($_GET['status']) && $_GET['status'] == 'error'): ?>
+                <div class="message error-message">Per favore, compila tutti i campi e inserisci un'email valida.</div>
+            <?php endif; ?>
+
+            <form action="process_contact.php" method="POST" class="contact-form">
+                <input type="hidden" name="provenienza" value="contacts.php">
                 <input type="text" name="name" placeholder="Il tuo Nome" required>
                 <input type="email" name="email" placeholder="La tua Email" required>
                 <textarea name="message" rows="5" placeholder="Il tuo Messaggio" required></textarea>
