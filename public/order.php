@@ -5,7 +5,6 @@ require_once __DIR__ . '/../config/db.php';
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-// Protezione della pagina: se l'utente non è loggato, lo rimanda al login
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -15,7 +14,7 @@ $page_title = "Come Ordinare";
 include_once __DIR__ . '/../templates/header.php';
 
 $piu_venduti = [];
-$sql_venduti = "SELECT nome, descrizione, path_immagine FROM Prodotti WHERE id_prodotto IN (1, 4) LIMIT 2"; // Esempio
+$sql_venduti = "SELECT nome, descrizione, path_immagine FROM Prodotti WHERE id_prodotto IN (1, 4) LIMIT 2";
 $result_venduti = $conn->query($sql_venduti);
 if ($result_venduti) {
     while ($row = $result_venduti->fetch_assoc()) {
@@ -24,17 +23,10 @@ if ($result_venduti) {
 }
 ?>
 <link rel="stylesheet" href="css/order.css">
-
 <div class="order-page-vertical-container">
-
     <section class="selection-section">
-        <h2>1. Scegli Giorno e Orario</h2>
-        <p class="section-subtitle">Vai nel menu per selezionare il giorno (oggi o domani) e la fascia oraria disponibile per la consegna.</p>
-    </section>
-
-    <section class="selection-section">
-        <h2>2. Scegli Cosa Ordinare</h2>
-        <p class="section-subtitle">Scegli tra i nostri panini, le pizzette oppure componi il tuo panino da zero!</p>
+        <h2>1. Scegli i tuoi Prodotti</h2>
+        <p class="section-subtitle">Naviga nel nostro menu e aggiungi al carrello tutto quello che desideri, dai panini classici alle bevande, oppure componi il tuo panino da zero!</p>
         <div class="order-options-grid">
             <a href="menu.php#panini" class="option-card"><img src="img/paninocotoletta.png" alt="I nostri Panini">
                 <div class="card-text">
@@ -58,39 +50,27 @@ if ($result_venduti) {
     </section>
 
     <section class="selection-section">
-        <h2>I più venduti</h2>
-        <div class="products-scroller">
-            <?php foreach ($piu_venduti as $prodotto): ?>
-                <div class="product-card">
-                    <img src="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>" alt="<?php echo htmlspecialchars($prodotto['nome']); ?>">
-                    <div class="product-info">
-                        <h3 class="product-name"><?php echo htmlspecialchars($prodotto['nome']); ?></h3>
-                        <p class="product-description-small"><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+        <h2>2. Scegli Data e Orario</h2>
+        <p class="section-subtitle">Una volta scelti i prodotti, vai al checkout. Lì potrai selezionare il giorno e la fascia oraria che preferisci per la consegna.</p>
+    </section>
+
+    <section class="selection-section">
+        <h2>3. Conferma e Paga</h2>
+        <p class="section-subtitle">Nella pagina di checkout, dopo aver scelto l'orario, potrai inserire i tuoi dati, aggiungere note e completare l'ordine con il pagamento.</p>
+    </section>
+
+    <section class="selection-section">
+        <h2>4. Attendi la Conferma</h2>
+        <p class="section-subtitle">Fatto! Riceverai una notifica sul sito per ogni cambio di stato del tuo ordine, dalla preparazione fino alla consegna.</p>
     </section>
 
     <section class="selection-section">
         <div class="cta-banner">
-            <h2>Non sai cosa prendere?</h2>
+            <h2>Pronto per ordinare?</h2>
             <p>Tranquillo, sfoglia il nostro menu completo!</p>
             <a href="menu.php" class="btn-hero">Sfoglia il Menu</a>
         </div>
     </section>
-
-    <section id="riepilogo-ordine" class="selection-section">
-        <h2>3. Conferma l'Ordine e Paga</h2>
-        <div class="summary-card text-center">
-            <i class="fas fa-shopping-cart summary-icon"></i>
-            <p>
-                Dopo aver scelto i prodotti, nel menu troverai il riepilogo finale. <br>
-                Ricorda che **puoi anche inserire il numero dell'aula** per la consegna!
-            </p>
-        </div>
-    </section>
-
 </div>
 
 <?php include_once __DIR__ . '/../templates/footer.php'; ?>
