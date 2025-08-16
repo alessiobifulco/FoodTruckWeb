@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `Ingredienti` (
 
 CREATE TABLE IF NOT EXISTS `FasceOrarie` (
     `id_fascia` INT AUTO_INCREMENT PRIMARY KEY,
-    `giorno_settimana` ENUM('lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi') NOT NULL,
+    `giorno_settimana` ENUM('lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica') NOT NULL,
     `ora_inizio` TIME NOT NULL,
     `ora_fine` TIME NOT NULL,
     `attiva` BOOLEAN NOT NULL DEFAULT TRUE,

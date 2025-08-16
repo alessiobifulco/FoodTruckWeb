@@ -57,7 +57,11 @@ INSERT INTO `FasceOrarie` (`giorno_settimana`, `ora_inizio`, `ora_fine`, `attiva
 ('martedi', '11:00:00', '11:30:00', TRUE, 10),('martedi', '11:30:00', '12:00:00', TRUE, 10),('martedi', '12:00:00', '12:30:00', TRUE, 10),('martedi', '12:30:00', '13:00:00', TRUE, 10),
 ('mercoledi', '11:00:00', '11:30:00', TRUE, 10),('mercoledi', '11:30:00', '12:00:00', TRUE, 10),('mercoledi', '12:00:00', '12:30:00', TRUE, 10),('mercoledi', '12:30:00', '13:00:00', TRUE, 10),
 ('giovedi', '11:00:00', '11:30:00', TRUE, 10),('giovedi', '11:30:00', '12:00:00', TRUE, 10),('giovedi', '12:00:00', '12:30:00', TRUE, 10),('giovedi', '12:30:00', '13:00:00', TRUE, 10),
-('venerdi', '11:00:00', '11:30:00', TRUE, 10),('venerdi', '11:30:00', '12:00:00', TRUE, 10),('venerdi', '12:00:00', '12:30:00', TRUE, 10),('venerdi', '12:30:00', '13:00:00', TRUE, 10);
+('venerdi', '11:00:00', '11:30:00', TRUE, 10),('venerdi', '11:30:00', '12:00:00', TRUE, 10),('venerdi', '12:00:00', '12:30:00', TRUE, 10),('venerdi', '12:30:00', '13:00:00', TRUE, 10),
+('sabato', '11:00:00', '11:30:00', TRUE, 10),('sabato', '11:30:00', '12:00:00', TRUE, 10),('sabato', '12:00:00', '12:30:00', TRUE, 10),('sabato', '12:30:00', '13:00:00', TRUE, 10),
+
+('domenica', '11:00:00', '11:30:00', TRUE, 10),('domenica', '11:30:00', '12:00:00', TRUE, 10),('domenica', '12:00:00', '12:30:00', TRUE, 10),('domenica', '12:30:00', '13:00:00', TRUE, 10);
+
 
 -- Popolamento Stato Fasce Giornaliere (Esempio per una data specifica)
 INSERT INTO `StatoFasceGiornaliere` (`id_fascia`, `data_riferimento`, `stato_giornaliero`, `numero_ordini_correnti`) VALUES
