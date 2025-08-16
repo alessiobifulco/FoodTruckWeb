@@ -10,6 +10,14 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$user_id = $_SESSION['user_id'];
+$stmt_user = $conn->prepare("SELECT primo_ordine_effettuato FROM Utenti WHERE id_utente = ?");
+$stmt_user->bind_param("i", $user_id);
+$stmt_user->execute();
+$user_result = $stmt_user->get_result()->fetch_assoc();
+$primo_ordine_effettuato = $user_result['primo_ordine_effettuato'];
+$stmt_user->close();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_data'])) {
     $_SESSION['cart'] = json_decode($_POST['cart_data'], true);
     header('Location: checkout.php');
@@ -52,30 +60,45 @@ foreach ($giorni_settimana_attivi as $giorno_en) {
     $stmt->close();
 }
 
-define('COSTO_CONSEGNA', 2.00);
+$costo_consegna = $primo_ordine_effettuato ? 2.00 : 0.00;
+$messaggio_sconto = !$primo_ordine_effettuato ? "Consegna gratuita applicata per il tuo primo ordine!" : "";
+
 $subtotal = 0;
 foreach ($cart as $item) {
-    $subtotal += $item['prezzo'];
+    $subtotal += $item['prezzo'] ?? 0;
 }
-$total = $subtotal + COSTO_CONSEGNA;
+$total = $subtotal + $costo_consegna;
 
 $page_title = "Checkout";
 include_once __DIR__ . '/../templates/header.php';
 ?>
 <link rel="stylesheet" href="css/checkout.css">
+<link rel="stylesheet" href="css/order_success.css">
+
 <main class="checkout-container">
     <div class="checkout-details">
         <form action="process_order.php" method="POST" id="final-checkout-form">
             <section class="checkout-section">
                 <h2>1. Riepilogo Ordine</h2>
                 <div class="summary-items-checkout">
-                    <?php foreach ($cart as $index => $item): ?>
+                    <?php foreach ($cart as $index => $item):
+                        $nome_prodotto = $item['nome'] ?? 'Prodotto non definito';
+                        $prezzo_prodotto = $item['prezzo'] ?? 0;
+                        $immagine_prodotto = $item['immagine'] ?? 'img/paninocomponibile.png';
+
+                        if (str_starts_with($nome_prodotto, 'Panino Normale') || str_starts_with($nome_prodotto, 'Panino Grande') || str_starts_with($nome_prodotto, 'Panino Maxi')) {
+                            if (str_starts_with($nome_prodotto, 'Panino Normale')) $nome_prodotto = 'Panino Normale Composto';
+                            if (str_starts_with($nome_prodotto, 'Panino Grande')) $nome_prodotto = 'Panino Grande Composto';
+                            if (str_starts_with($nome_prodotto, 'Panino Maxi')) $nome_prodotto = 'Panino Maxi Composto';
+                            $immagine_prodotto = 'img/paninocomponibile.png';
+                        }
+                    ?>
                         <div class="summary-item">
-                            <img src="<?php echo htmlspecialchars($item['immagine']); ?>" alt="" class="item-image">
+                            <img src="<?php echo htmlspecialchars($immagine_prodotto); ?>" alt="" class="item-image">
                             <div class="item-details">
-                                <span class="item-name"><?php echo htmlspecialchars($item['nome']); ?></span>
+                                <span class="item-name"><?php echo htmlspecialchars($nome_prodotto); ?></span>
                             </div>
-                            <span class="item-price"><?php echo number_format($item['prezzo'], 2, ',', ''); ?> €</span>
+                            <span class="item-price"><?php echo number_format($prezzo_prodotto, 2, ',', ''); ?> €</span>
                             <a href="checkout.php?remove=<?php echo $index; ?>" class="remove-item-btn" title="Rimuovi">&times;</a>
                         </div>
                     <?php endforeach; ?>
@@ -101,22 +124,22 @@ include_once __DIR__ . '/../templates/header.php';
             <section class="checkout-section">
                 <h2>3. Dati di Consegna</h2>
                 <div class="form-group">
-                    <label>Contatto</label>
-                    <input type="text" value="<?php echo htmlspecialchars($_SESSION['user_email']); ?>" disabled>
+                    <label for="email">Contatto</label>
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($_SESSION['user_email'] ?? ''); ?>" autocomplete="email" disabled>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nome">Nome</label>
-                        <input type="text" id="nome" name="nome" required>
+                        <input type="text" id="nome" name="nome" autocomplete="given-name" required>
                     </div>
                     <div class="form-group">
                         <label for="cognome">Cognome</label>
-                        <input type="text" id="cognome" name="cognome" required>
+                        <input type="text" id="cognome" name="cognome" autocomplete="family-name" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="aula">Aula (Opzionale)</label>
-                    <input type="text" id="aula" name="aula" placeholder="Es: 2.12">
+                    <input type="text" id="aula" name="aula">
                 </div>
                 <div class="form-group">
                     <label for="note">Note per l'ordine (Opzionale)</label>
@@ -127,8 +150,12 @@ include_once __DIR__ . '/../templates/header.php';
             <button type="submit" id="pay-button" class="btn-pay" disabled>Paga Ora (Simulato)</button>
         </form>
     </div>
+
     <aside class="checkout-summary">
         <h3>Totale Ordine</h3>
+        <?php if ($messaggio_sconto): ?>
+            <div class="recap-line success-message" style="display: block; text-align: center; background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 0.9rem;"><?php echo $messaggio_sconto; ?></div>
+        <?php endif; ?>
         <div class="summary-recap">
             <div class="recap-line">
                 <span>Subtotale</span>
@@ -136,7 +163,7 @@ include_once __DIR__ . '/../templates/header.php';
             </div>
             <div class="recap-line">
                 <span>Costo Consegna</span>
-                <span><?php echo number_format(COSTO_CONSEGNA, 2, ',', ''); ?> €</span>
+                <span><?php echo number_format($costo_consegna, 2, ',', ''); ?> €</span>
             </div>
             <div class="recap-line total">
                 <span>Totale</span>
@@ -145,6 +172,21 @@ include_once __DIR__ . '/../templates/header.php';
         </div>
     </aside>
 </main>
+
+<div id="success-message" class="success-container" style="display: none;">
+    <div class="success-card">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Pagamento andato a buon fine!</h1>
+        <p>Il tuo ordine è stato ricevuto e stiamo già iniziando a prepararlo. Riceverai una notifica per ogni aggiornamento.</p>
+        <div class="success-actions">
+            <a href="whoweare.php" class="btn-secondary">Scopri chi siamo</a>
+            <a href="account.php" class="btn-primary">Vai ai miei ordini</a>
+        </div>
+    </div>
+</div>
+
 <script>
     const fasceOrarie = <?php echo json_encode($fasce_orarie_per_giorno); ?>;
 </script>

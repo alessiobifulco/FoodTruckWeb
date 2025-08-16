@@ -139,19 +139,19 @@ if ($result_ingredienti) {
             <div class="ingredient-category" data-categoria="proteina">
                 <h4 id="proteina-title">Scegli la Proteina</h4>
                 <?php foreach ($ingredienti_per_categoria['proteina'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="proteina" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option"><input type="checkbox" name="proteina[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
             <div class="ingredient-category" data-categoria="contorno">
                 <h4 id="contorno-title">Scegli il Contorno</h4>
                 <?php foreach ($ingredienti_per_categoria['contorno'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="contorno" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option"><input type="checkbox" name="contorno[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
             <div class="ingredient-category" data-categoria="salsa">
                 <h4 id="salsa-title">Scegli la Salsa</h4>
                 <?php foreach ($ingredienti_per_categoria['salsa'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="salsa" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option"><input type="checkbox" name="salsa[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
         </div>

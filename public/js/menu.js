@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function saveCartToSessionStorage() {
         sessionStorage.setItem('foodTruckMenuCart', JSON.stringify(cart));
-        fetch('/FOODTRACKWEB/public/update_cart.php', {
+        fetch('api/update_cart.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(cart)
@@ -45,23 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         checkoutButton.disabled = cart.length === 0;
     }
-
-    function validateOverlaySelections() {
-        const paneSelezionato = ingredientPicker.querySelector('input[name="pane"]:checked');
-        const proteineSelezionate = ingredientPicker.querySelectorAll('input[name="proteina[]"]:checked').length;
-        const proteineRichieste = limitiSelezione.proteina || 0;
-        addCustomPaninoBtn.disabled = !(paneSelezionato && proteineSelezionate >= proteineRichieste);
-    }
-
-    const closeOverlay = () => {
-        if (!overlay) return;
-        overlay.style.display = 'none';
-        document.body.classList.remove('overlay-open');
-        ingredientPicker.querySelectorAll('input').forEach(input => {
-            input.checked = false;
-            input.disabled = false;
-        });
-    };
 
     addToCartButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -101,12 +84,30 @@ document.addEventListener('DOMContentLoaded', function () {
         const overlayTitle = document.getElementById('overlay-title');
         const overlayDescription = document.getElementById('overlay-description');
 
+        const closeOverlay = () => {
+            if (!overlay) return;
+            overlay.style.display = 'none';
+            document.body.classList.remove('overlay-open');
+            ingredientPicker.querySelectorAll('input').forEach(input => {
+                input.checked = false;
+                input.disabled = false;
+            });
+        };
+
+        const validateOverlaySelections = () => {
+            const paneSelezionato = ingredientPicker.querySelector('input[name="pane"]:checked');
+            const proteineSelezionate = ingredientPicker.querySelectorAll('input[name="proteina[]"]:checked').length;
+            const proteineRichieste = limitiSelezione.proteina || 0;
+            addCustomPaninoBtn.disabled = !(paneSelezionato && proteineSelezionate >= proteineRichieste);
+        };
+
         openOverlayButtons.forEach(button => {
             button.addEventListener('click', () => {
                 paninoBase = { id: button.dataset.id, nome: button.dataset.nomePanino, prezzo: parseFloat(button.dataset.prezzo), immagine: button.dataset.immagine };
                 limitiSelezione = { proteina: parseInt(button.dataset.limiteProteina), contorno: parseInt(button.dataset.limiteContorno), salsa: parseInt(button.dataset.limiteSalsa) };
                 overlayTitle.textContent = paninoBase.nome;
                 overlayDescription.textContent = button.closest('.product-item').querySelector('p').textContent;
+                document.getElementById('proteina-title').innerHTML = `Scegli la Proteina <span class="required-badge">${limitiSelezione.proteina} Obbligatori</span>`;
                 validateOverlaySelections();
                 overlay.style.display = 'flex';
                 document.body.classList.add('overlay-open');

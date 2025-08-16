@@ -1,8 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const finalCheckoutForm = document.getElementById('final-checkout-form');
+    const payButton = document.getElementById('pay-button');
     const dayButtons = document.querySelectorAll('.day-selector-btn');
     const timeSelect = document.getElementById('delivery_time');
     const dayInput = document.getElementById('delivery_day');
-    const payButton = document.getElementById('pay-button');
+
+    const checkoutContainer = document.querySelector('.checkout-container');
+    const successMessageContainer = document.getElementById('success-message');
 
     const today = new Date();
     const tomorrow = new Date();
@@ -19,6 +23,37 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     let selectedDayName = null;
+
+    finalCheckoutForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        payButton.textContent = 'Processando...';
+        payButton.disabled = true;
+
+        const formData = new FormData(finalCheckoutForm);
+
+        try {
+            const response = await fetch('process_order.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                checkoutContainer.style.display = 'none';
+                successMessageContainer.style.display = 'flex';
+                window.scrollTo(0, 0);
+            } else {
+                alert('Errore: ' + result.message || 'Si è verificato un problema. Riprova.');
+                payButton.textContent = 'Paga Ora (Simulato)';
+                checkFormValidity();
+            }
+        } catch (error) {
+            alert('Si è verificato un errore di rete. Riprova.');
+            payButton.textContent = 'Paga Ora (Simulato)';
+            checkFormValidity();
+        }
+    });
 
     dayButtons.forEach(button => {
         button.addEventListener('click', function () {
