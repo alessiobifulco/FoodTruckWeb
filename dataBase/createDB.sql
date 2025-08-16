@@ -87,7 +87,10 @@ CREATE TABLE IF NOT EXISTS `Notifiche` (
     `messaggio` TEXT NOT NULL,
     `data_creazione` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `letta` BOOLEAN NOT NULL DEFAULT FALSE,
-    `tipo_notifica` ENUM('ordine_status', 'disponibilita_prodotto', 'messaggio_generico', 'sconto_benvenuto', 'fascia_piena_venditore', 'nuovo_ordine_venditore') NOT NULL DEFAULT 'messaggio_generico',
+    `tipo_notifica` ENUM('ordine_status', 
+    'sconto_benvenuto', 
+    'nuovo_ordine_venditore',
+    'nuovo_utente') NOT NULL,
     `id_ordine_riferimento` INT, -- NULLABLE
     FOREIGN KEY (`id_utente_destinatario`) REFERENCES `Utenti`(`id_utente`),
     FOREIGN KEY (`id_ordine_riferimento`) REFERENCES `Ordini`(`id_ordine`)

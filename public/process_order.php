@@ -7,12 +7,10 @@ header('Content-Type: application/json');
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Utente non autenticato.']);
     exit;
 }
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Metodo non valido.']);
     exit;
@@ -57,7 +55,7 @@ try {
 
     $stmt_dettagli = $conn->prepare("INSERT INTO DettagliOrdine (id_ordine, id_prodotto, quantita, prezzo_unitario_al_momento_ordine) VALUES (?, ?, 1, ?)");
     foreach ($cart as $item) {
-        $id_prodotto = isset($item['id']) ? $item['id'] : null;
+        $id_prodotto = (isset($item['id']) && is_numeric($item['id'])) ? $item['id'] : null;
         $stmt_dettagli->bind_param("iid", $id_ordine, $id_prodotto, $item['prezzo']);
         $stmt_dettagli->execute();
     }
@@ -69,6 +67,19 @@ try {
         $stmt_update_user->execute();
         $stmt_update_user->close();
     }
+
+    $id_venditore = 2;
+    $messaggio_venditore = "Nuovo ordine ricevuto #" . str_pad($id_ordine, 5, '0', STR_PAD_LEFT) . " da " . htmlspecialchars($_SESSION['user_email']);
+    $tipo_notifica_venditore = 'nuovo_ordine_venditore';
+    $stmt_notifica = $conn->prepare("INSERT INTO Notifiche (id_utente_destinatario, messaggio, tipo_notifica, id_ordine_riferimento) VALUES (?, ?, ?, ?)");
+    $stmt_notifica->bind_param("issi", $id_venditore, $messaggio_venditore, $tipo_notifica_venditore, $id_ordine);
+    $stmt_notifica->execute();
+
+    $messaggio_cliente = "Il tuo ordine #" . str_pad($id_ordine, 5, '0', STR_PAD_LEFT) . " è stato ricevuto!";
+    $tipo_notifica_cliente = 'ordine_status';
+    $stmt_notifica->bind_param("issi", $user_id, $messaggio_cliente, $tipo_notifica_cliente, $id_ordine);
+    $stmt_notifica->execute();
+    $stmt_notifica->close();
 
     $conn->commit();
 

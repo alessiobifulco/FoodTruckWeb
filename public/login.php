@@ -8,7 +8,7 @@ require_once __DIR__ . '/../config/db.php';
 $page_title = "Accedi o Registrati";
 $error_message = '';
 $success_message = '';
-$form_to_display = 'login'; // Di default mostra il form di login
+$form_to_display = 'login';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['login_submit'])) {
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_role'] = $user['ruolo'];
                 if ($user['ruolo'] === 'venditore') {
-                    header('Location: adminPage/adminDashboard.php');
+                    header('Location: admin/dashboard.php');
                 } else {
                     header('Location: order.php');
                 }
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
         }
     } elseif (isset($_POST['register_submit'])) {
-        $form_to_display = 'register'; // Se c'è un errore, rimani su questa scheda
+        $form_to_display = 'register';
         $email_reg = trim($_POST['email_reg']);
         $password_reg = $_POST['password_reg'];
         $confirm_password_reg = $_POST['confirm_password_reg'];
@@ -59,6 +59,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $insert_stmt->bind_param("ss", $email_reg, $hashed_password);
                 if ($insert_stmt->execute()) {
                     $new_user_id = $insert_stmt->insert_id;
+
+                    $id_venditore = 2;
+                    $messaggio_venditore = "Nuovo utente registrato: " . htmlspecialchars($email_reg);
+                    $tipo_notifica_venditore = 'nuovo_utente';
+                    $stmt_notifica = $conn->prepare("INSERT INTO Notifiche (id_utente_destinatario, messaggio, tipo_notifica) VALUES (?, ?, ?)");
+                    $stmt_notifica->bind_param("iss", $id_venditore, $messaggio_venditore, $tipo_notifica_venditore);
+                    $stmt_notifica->execute();
+
+                    $messaggio_cliente = "Benvenuto! Hai diritto alla consegna gratuita sul tuo primo ordine.";
+                    $tipo_notifica_cliente = 'sconto_benvenuto';
+                    $stmt_notifica->bind_param("iss", $new_user_id, $messaggio_cliente, $tipo_notifica_cliente);
+                    $stmt_notifica->execute();
+                    $stmt_notifica->close();
+
                     $_SESSION['user_id'] = $new_user_id;
                     $_SESSION['user_email'] = $email_reg;
                     $_SESSION['user_role'] = 'cliente';
