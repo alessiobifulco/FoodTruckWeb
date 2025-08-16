@@ -1,10 +1,10 @@
 USE `FoodTruckDB`;
 
 -- Inserisce i nuovi utenti con password semplici e già criptate (hashate)
-INSERT INTO `Utenti` (`email`, `password`, `ruolo`, `attivo`) VALUES
-('cliente1@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'cliente', TRUE), -- Password: user1
-('venditore@campus.it', '$2y$10$sW.7e8f9g0h1i2j3k4l5m.oP.q6r7s8t9u0v1w2x3y4z5A6', 'venditore', TRUE), -- Password: admin
-('prova@prova.it', '$2y$10$wI4p.h8v/2xG8h.Lg2f7a.Xg.S3h.9j.Zg.Yg.S3h.9j.Zg.Yg.S', 'cliente', TRUE); -- Password: 1234
+INSERT INTO `Utenti` (`email`, `password`, `ruolo`, `attivo`, `primo_ordine_effettuato`) VALUES
+('cliente1@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'cliente', TRUE, FALSE),
+('venditore@campus.it', '$2y$10$sW.7e8f9g0h1i2j3k4l5m.oP.q6r7s8t9u0v1w2x3y4z5A6', 'venditore', TRUE, FALSE),
+('prova@prova.it', '$2y$10$wI4p.h8v/2xG8h.Lg2f7a.Xg.S3h.9j.Zg.Yg.S3h.9j.Zg.Yg.S', 'cliente', TRUE, FALSE);
 
 -- Popolamento Ingredienti
 INSERT INTO `Ingredienti` (`nome`, `categoria_ingrediente`, `disponibile`) VALUES
@@ -40,8 +40,8 @@ INSERT INTO `Prodotti` (`nome`, `descrizione`, `prezzo`, `categoria`, `path_imma
 ('Margherita', 'pomodoro, mozzarella', 2.50, 'pizzetta', 'img/pizzettamargherita.png', TRUE),
 ('Pizzetta Salsiccia', 'pomodoro, mozzarella, salsiccia', 3.00, 'pizzetta', 'img/pizzettasalsiccia.png', TRUE),
 ('Pizzetta Wurstel e Patatine', 'pomodoro, mozzarella, patatine, wurstel', 3.00, 'pizzetta', 'img/pizzettawurstel.png', TRUE),
-('Pizzetta Rossa', 'pomodoro', 2.00, 'pizzetta', 'img/pizzetta-rossa.jpg', TRUE),
-('Pizzetta Cotto', 'mozzarella, cotto', 2.50, 'pizzetta', 'img/pizzetta-cotto.jpg', TRUE),
+('Pizzetta Rossa', 'pomodoro', 2.00, 'pizzetta', 'img/pizzettarossa.png', TRUE),
+('Pizzetta Cotto', 'mozzarella, cotto', 2.50, 'pizzetta', 'img/pizzettacotto.png', TRUE),
 ('Pizzetta Salame Piccante', 'Pomodoro, mozzarella e salame piccante', 3.50, 'pizzetta', 'img/pizzettasalamepiccante.png', TRUE),
 ('Focaccia con Olio e Sale', 'Semplice focaccia con olio extra vergine e sale', 2.50, 'pizzetta', 'img/focaccia.png', TRUE),
 ('Acqua da 500ml', 'Acqua minerale naturale', 1.50, 'bevanda', 'img/acqua.png', TRUE),

@@ -4,11 +4,12 @@ USE `FoodTruckDB`;
 SET FOREIGN_KEY_CHECKS = 0;
 
 CREATE TABLE IF NOT EXISTS `Utenti` (
-    `id_utente` INT AUTO_INCREMENT PRIMARY KEY,
-    `email` VARCHAR(255) NOT NULL UNIQUE,
-    `password` VARCHAR(255) NOT NULL,
-    `ruolo` ENUM('cliente', 'venditore') NOT NULL DEFAULT 'cliente',
-    `attivo` BOOLEAN NOT NULL DEFAULT TRUE
+  `id_utente` INT AUTO_INCREMENT PRIMARY KEY,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
+  `ruolo` ENUM('cliente', 'venditore') NOT NULL DEFAULT 'cliente',
+  `attivo` BOOLEAN NOT NULL DEFAULT TRUE,
+  `primo_ordine_effettuato` BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS `Prodotti` (
@@ -90,6 +91,15 @@ CREATE TABLE IF NOT EXISTS `Notifiche` (
     `id_ordine_riferimento` INT, -- NULLABLE
     FOREIGN KEY (`id_utente_destinatario`) REFERENCES `Utenti`(`id_utente`),
     FOREIGN KEY (`id_ordine_riferimento`) REFERENCES `Ordini`(`id_ordine`)
+);
+
+CREATE TABLE IF NOT EXISTS `Messaggi` (
+  `id_messaggio` INT AUTO_INCREMENT PRIMARY KEY,
+  `nome_mittente` VARCHAR(100) NOT NULL,
+  `email_mittente` VARCHAR(255) NOT NULL,
+  `testo_messaggio` TEXT NOT NULL,
+  `data_invio` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `letto` BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 SET FOREIGN_KEY_CHECKS = 1;
