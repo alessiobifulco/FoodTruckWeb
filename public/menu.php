@@ -23,7 +23,7 @@ if ($selected_day === 'tomorrow') {
 }
 $selected_date_str = $selected_date_obj->format('Y-m-d');
 $day_of_week_english = strtolower($selected_date_obj->format('l'));
-$giorni_italiano = ['monday' => 'lunedi', 'tuesday' => 'martedi', 'wednesday' => 'mercoledi', 'thursday' => 'giovedi', 'friday' => 'venerdi'];
+$giorni_italiano = ['monday' => 'lunedi', 'tuesday' => 'martedi', 'wednesday' => 'mercoledi', 'thursday' => 'giovedi', 'friday' => 'venerdi', 'saturday' => 'sabato', 'sunday' => 'domenica'];
 $giorno_settimana_db = $giorni_italiano[$day_of_week_english] ?? '';
 
 $fasce_orarie = [];
