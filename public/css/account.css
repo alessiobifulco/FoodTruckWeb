@@ -166,3 +166,76 @@
 .btn-link-danger {
     color: #dc3545;
 }
+
+/* Stili per Overlay Account */
+.account-overlay-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.account-overlay-content {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.account-overlay-content .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.account-overlay-content h3 {
+    font-family: 'Oswald', sans-serif;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.account-overlay-content .form-group {
+    margin-bottom: 20px;
+}
+
+.account-overlay-content .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.account-overlay-content .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.account-overlay-content .btn-submit {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background-color: #343a40;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+}

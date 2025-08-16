@@ -5,8 +5,6 @@ require_once __DIR__ . '/../config/db.php';
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-
-// Protezione della pagina: se l'utente non è loggato, lo rimanda al login
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -18,7 +16,6 @@ include_once __DIR__ . '/../templates/header.php';
 $user_id = $_SESSION['user_id'];
 $user_email = $_SESSION['user_email'];
 
-// Recupero ordini dell'utente
 $ordini = [];
 $stmt_ordini = $conn->prepare("SELECT id_ordine, data_ordine, totale, stato FROM Ordini WHERE id_utente = ? ORDER BY data_ordine DESC");
 $stmt_ordini->bind_param("i", $user_id);
@@ -29,7 +26,6 @@ while ($row = $result_ordini->fetch_assoc()) {
 }
 $stmt_ordini->close();
 
-// Recupero notifiche dell'utente
 $notifiche = [];
 $stmt_notifiche = $conn->prepare("SELECT id_notifica, messaggio, data_creazione, letta FROM Notifiche WHERE id_utente_destinatario = ? ORDER BY data_creazione DESC");
 $stmt_notifiche->bind_param("i", $user_id);
@@ -41,76 +37,97 @@ while ($row = $result_notifiche->fetch_assoc()) {
 $stmt_notifiche->close();
 ?>
 
-<!DOCTYPE html>
-<html lang="it">
+<link rel="stylesheet" href="css/account.css">
 
-<head>
-    <link rel="stylesheet" href="css/account.css">
-</head>
+<div class="account-container">
+    <h1>Il Mio Account</h1>
 
-<body>
-    <div class="account-container">
-        <h1>Il Mio Account</h1>
+    <div id="account-page-message"></div>
 
-        <section class="account-section">
-            <h2>Dettagli Account</h2>
-            <div class="details-card">
-                <span>Sei loggato come: <strong><?php echo htmlspecialchars($user_email); ?></strong></span>
-                <button class="btn-secondary">Cambia Password</button>
-            </div>
-            <div class="details-card">
-                <span>Vuoi cancellare il tuo account?</span>
-                <button class="btn-danger">Elimina Account</button>
-            </div>
-        </section>
+    <section class="account-section">
+        <h2>Dettagli Account</h2>
+        <div class="details-card">
+            <span>Sei loggato come: <strong><?php echo htmlspecialchars($user_email); ?></strong></span>
+            <button id="change-password-btn" class="btn-secondary">Cambia Password</button>
+        </div>
+        <div class="details-card">
+            <span>Vuoi cancellare il tuo account?</span>
+            <button id="delete-account-btn" class="btn-danger">Elimina Account</button>
+        </div>
+    </section>
 
-        <section class="account-section">
-            <h2>Storico Ordini</h2>
-            <div class="order-history-container">
-                <?php if (empty($ordini)): ?>
-                    <p>Non hai ancora effettuato nessun ordine.</p>
-                <?php else: ?>
-                    <?php foreach ($ordini as $ordine): ?>
-                        <div class="order-card">
-                            <div class="order-info">
-                                <span><strong>Order ID:</strong> #<?php echo str_pad($ordine['id_ordine'], 5, '0', STR_PAD_LEFT); ?></span>
-                                <span><strong>Data:</strong> <?php echo date('d/m/Y', strtotime($ordine['data_ordine'])); ?></span>
-                                <span><strong>Totale:</strong> <?php echo number_format($ordine['totale'], 2, ',', ''); ?> €</span>
-                            </div>
-                            <div class="order-status">
-                                <span class="status-badge status-<?php echo strtolower(htmlspecialchars($ordine['stato'])); ?>">
-                                    <?php echo htmlspecialchars(str_replace('_', ' ', $ordine['stato'])); ?>
-                                </span>
-                            </div>
+    <section class="account-section">
+        <h2>Storico Ordini</h2>
+        <div class="order-history-container">
+            <?php if (empty($ordini)): ?>
+                <p>Non hai ancora effettuato nessun ordine.</p>
+            <?php else: ?>
+                <?php foreach ($ordini as $ordine): ?>
+                    <div class="order-card">
+                        <div class="order-info">
+                            <span><strong>Order ID:</strong> #<?php echo str_pad($ordine['id_ordine'], 5, '0', STR_PAD_LEFT); ?></span>
+                            <span><strong>Data:</strong> <?php echo date('d/m/Y', strtotime($ordine['data_ordine'])); ?></span>
+                            <span><strong>Totale:</strong> <?php echo number_format($ordine['totale'], 2, ',', ''); ?> €</span>
                         </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </section>
-
-        <section class="account-section">
-            <h2>Centro Notifiche</h2>
-            <div class="notifications-container">
-                <?php if (empty($notifiche)): ?>
-                    <p>Nessuna notifica presente.</p>
-                <?php else: ?>
-                    <?php foreach ($notifiche as $notifica): ?>
-                        <div class="notification-item <?php echo !$notifica['letta'] ? 'unread' : ''; ?>">
-                            <div class="notification-text">
-                                <i class="fas fa-bell"></i>
-                                <p><?php echo htmlspecialchars($notifica['messaggio']); ?></p>
-                            </div>
-                            <div class="notification-actions">
-                                <span><?php echo date('d/m/Y H:i', strtotime($notifica['data_creazione'])); ?></span>
-                                <?php if (!$notifica['letta']): ?>
-                                    <button class="btn-link">Segna come letta</button>
-                                <?php endif; ?>
-                                <button class="btn-link-danger">Elimina</button>
-                            </div>
+                        <div class="order-status">
+                            <span class="status-badge status-<?php echo strtolower(htmlspecialchars($ordine['stato'])); ?>">
+                                <?php echo htmlspecialchars(str_replace('_', ' ', $ordine['stato'])); ?>
+                            </span>
                         </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </section>
+
+    <section class="account-section">
+        <h2>Centro Notifiche</h2>
+        <div id="notifications-list" class="notifications-container">
+            <?php if (empty($notifiche)): ?>
+                <p>Nessuna notifica presente.</p>
+            <?php else: ?>
+                <?php foreach ($notifiche as $notifica): ?>
+                    <div class="notification-item <?php echo !$notifica['letta'] ? 'unread' : ''; ?>">
+                        <div class="notification-text">
+                            <i class="fas fa-bell"></i>
+                            <p><?php echo htmlspecialchars($notifica['messaggio']); ?></p>
+                        </div>
+                        <div class="notification-actions">
+                            <span><?php echo date('d/m/Y H:i', strtotime($notifica['data_creazione'])); ?></span>
+                            <?php if (!$notifica['letta']): ?>
+                                <button class="btn-link" data-action="mark_read" data-id="<?php echo $notifica['id_notifica']; ?>">Segna come letta</button>
+                            <?php endif; ?>
+                            <button class="btn-link-danger" data-action="delete" data-id="<?php echo $notifica['id_notifica']; ?>">Elimina</button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </section>
+</div>
+
+<div id="change-password-overlay" class="account-overlay-container">
+    <div class="account-overlay-content">
+        <button class="close-btn">&times;</button>
+        <h3>Cambia la tua Password</h3>
+        <div id="password-message" style="margin-bottom: 15px;"></div>
+        <form id="change-password-form">
+            <div class="form-group">
+                <label for="current_password">Password Attuale</label>
+                <input type="password" id="current_password" name="current_password" required>
             </div>
-        </section>
+            <div class="form-group">
+                <label for="new_password">Nuova Password</label>
+                <input type="password" id="new_password" name="new_password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Conferma Nuova Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="btn-submit">Salva Modifiche</button>
+        </form>
     </div>
-    <?php include_once __DIR__ . '/../templates/footer.php'; ?>
+</div>
+
+<script src="js/account.js" defer></script>
+<?php include_once __DIR__ . '/../templates/footer.php'; ?>

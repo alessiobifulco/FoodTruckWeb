@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function saveCartToSessionStorage() {
         sessionStorage.setItem('foodTruckMenuCart', JSON.stringify(cart));
-        fetch('api/update_cart.php', {
+        fetch('/FOODTRACKWEB/public/update_cart.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(cart)

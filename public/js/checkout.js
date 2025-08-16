@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(finalCheckoutForm);
 
         try {
-            const response = await fetch('process_order.php', {
+            const response = await fetch('/FOODTRACK/public/process_order.php', {
                 method: 'POST',
                 body: formData
             });

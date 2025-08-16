@@ -94,6 +94,5 @@ include_once __DIR__ . '/../templates/header.php';
         </div>
     </section>
 </main>
-<script src="js/home_contact.js" defer></script>
 
 <?php include_once __DIR__ . '/../templates/footer.php'; ?>
