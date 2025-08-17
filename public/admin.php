@@ -19,9 +19,16 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_details' && isset($_GET['
     $stmt->bind_param("i", $order_id);
     $stmt->execute();
     $main_details = $stmt->get_result()->fetch_assoc();
+
     if ($main_details) {
         $response['details'] = $main_details;
-        $stmt_products = $conn->prepare("SELECT p.nome, do.quantita, do.prezzo_unitario_al_momento_ordine FROM DettagliOrdine do LEFT JOIN Prodotti p ON do.id_prodotto = p.id_prodotto WHERE do.id_ordine = ?");
+
+        $sql_products = "SELECT COALESCE(do.nome_personalizzato, p.nome) AS nome, do.quantita, do.prezzo_unitario_al_momento_ordine 
+                         FROM DettagliOrdine do 
+                         LEFT JOIN Prodotti p ON do.id_prodotto = p.id_prodotto 
+                         WHERE do.id_ordine = ?";
+
+        $stmt_products = $conn->prepare($sql_products);
         $stmt_products->bind_param("i", $order_id);
         $stmt_products->execute();
         $products = $stmt_products->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -78,7 +85,7 @@ function time_ago($datetime)
 }
 
 $ordini = [];
-$sql = "SELECT o.id_ordine, o.data_ordine, o.aula_consegna, o.stato, GROUP_CONCAT(COALESCE(p.nome, 'Panino Composto') SEPARATOR ', ') AS prodotti
+$sql = "SELECT o.id_ordine, o.data_ordine, o.aula_consegna, o.stato, GROUP_CONCAT(COALESCE(do.nome_personalizzato, p.nome) SEPARATOR ', ') AS prodotti
         FROM Ordini o 
         JOIN DettagliOrdine do ON o.id_ordine = do.id_ordine 
         LEFT JOIN Prodotti p ON do.id_prodotto = p.id_prodotto
@@ -97,7 +104,6 @@ include_once __DIR__ . '/../templates/header.php';
 
 <div class="dashboard-container">
     <h1>Dashboard Venditore</h1>
-
     <section class="card">
         <h2>Ordini di Oggi</h2>
         <div id="order-list">
@@ -152,7 +158,6 @@ include_once __DIR__ . '/../templates/header.php';
             <?php endif; ?>
         </div>
     </section>
-
     <section class="card">
         <h2>Gestione</h2>
         <div class="management-buttons">

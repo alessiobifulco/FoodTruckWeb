@@ -261,3 +261,9 @@ form select {
 .close-btn:hover {
     color: black;
 }
+
+.product-ingredients {
+    color: #555;
+    font-style: italic;
+    margin-left: 15px;
+}

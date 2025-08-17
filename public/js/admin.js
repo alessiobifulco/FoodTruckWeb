@@ -17,13 +17,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     .then(data => {
                         if (data && data.details) {
                             document.getElementById('modalOrderId').textContent = `#${data.details.id_ordine}`;
-                            document.getElementById('modalOrderDetails').innerHTML = `<p><strong>Ricevuto il:</strong> ${new Date(data.details.data_ordine).toLocaleString('it-IT')}</p><p><strong>Ricevente:</strong> ${data.details.nome_ricevente} ${data.details.cognome_ricevente}</p><p><strong>Aula Consegna:</strong> ${data.details.aula_consegna}</p><p><strong>Totale:</strong> ${parseFloat(data.details.totale).toFixed(2)} €</p><p><strong>Stato:</strong> ${data.details.stato}</p><p><strong>Note:</strong> ${data.details.note_utente || 'Nessuna nota'}</p>`;
+                            document.getElementById('modalOrderDetails').innerHTML = `<p><strong>Ricevuto il:</strong> ${new Date(data.details.data_ordine).toLocaleString('it-IT')}</p><p><strong>Ricevente:</strong> ${data.details.nome_ricevente} ${data.details.cognome_ricevente}</p><p><strong>Aula Consegna:</strong> ${data.details.aula_consegna || 'N/D'}</p><p><strong>Totale:</strong> ${parseFloat(data.details.totale).toFixed(2)} €</p><p><strong>Stato:</strong> ${data.details.stato}</p><p><strong>Note:</strong> ${data.details.note_utente || 'Nessuna nota'}</p>`;
                             const productList = document.getElementById('modalProductList');
                             productList.innerHTML = '';
                             if (data.products && Array.isArray(data.products)) {
                                 data.products.forEach(product => {
                                     const li = document.createElement('li');
-                                    li.textContent = `${product.quantita} x ${product.nome} (@ ${parseFloat(product.prezzo_unitario_al_momento_ordine).toFixed(2)} €)`;
+                                    let productText = `${product.quantita} x ${product.nome} (@ ${parseFloat(product.prezzo_unitario_al_momento_ordine).toFixed(2)} €)`;
+
+                                    if (product.ingredienti && product.ingredienti.length > 0) {
+                                        const ingredients = product.ingredienti.map(ing => ing.nome).join(', ');
+                                        productText += `<br><small class="product-ingredients">Ingredienti: ${ingredients}</small>`;
+                                    }
+
+                                    li.innerHTML = productText;
                                     productList.appendChild(li);
                                 });
                             }
