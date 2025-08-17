@@ -52,7 +52,7 @@ if ($result_ingredienti) {
                         <p><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
                         <span class="product-price"><?php echo number_format($prodotto['prezzo'], 2, ',', ''); ?> €</span>
                     </div>
-                    <div class="product-action"><button class="add-to-cart-btn" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>">AGGIUNGI</button></div>
+                    <div class="product-action"><button class="add-to-cart-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>">AGGIUNGI</button></div>
                 </div>
             <?php endforeach; ?>
         </section>
@@ -66,7 +66,7 @@ if ($result_ingredienti) {
                         <p><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
                         <span class="product-price"><?php echo number_format($prodotto['prezzo'], 2, ',', ''); ?> €</span>
                     </div>
-                    <div class="product-action"><button class="add-to-cart-btn" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>">AGGIUNGI</button></div>
+                    <div class="product-action"><button class="add-to-cart-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>">AGGIUNGI</button></div>
                 </div>
             <?php endforeach; ?>
         </section>
@@ -88,7 +88,7 @@ if ($result_ingredienti) {
                         <span class="product-price"><?php echo number_format($prodotto['prezzo'], 2, ',', ''); ?> €</span>
                     </div>
                     <div class="product-action">
-                        <button class="open-overlay-btn" data-prezzo="<?php echo $prodotto['prezzo']; ?>" data-limite-proteina="<?php echo $limiti['proteina']; ?>" data-limite-contorno="<?php echo $limiti['contorno']; ?>" data-limite-salsa="<?php echo $limiti['salsa']; ?>" data-nome-panino="<?php echo htmlspecialchars(str_replace(' (base)', '', $prodotto['nome'])); ?>">SCEGLI</button>
+                        <button class="open-overlay-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>" data-limite-proteina="<?php echo $limiti['proteina']; ?>" data-limite-contorno="<?php echo $limiti['contorno']; ?>" data-limite-salsa="<?php echo $limiti['salsa']; ?>" data-nome-panino="<?php echo htmlspecialchars(str_replace(' (base)', '', $prodotto['nome'])); ?>">SCEGLI</button>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -103,7 +103,7 @@ if ($result_ingredienti) {
                         <p><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
                         <span class="product-price"><?php echo number_format($prodotto['prezzo'], 2, ',', ''); ?> €</span>
                     </div>
-                    <div class="product-action"><button class="add-to-cart-btn" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>">AGGIUNGI</button></div>
+                    <div class="product-action"><button class="add-to-cart-btn" data-id="<?php echo $prodotto['id_prodotto']; ?>" data-nome="<?php echo htmlspecialchars($prodotto['nome']); ?>" data-prezzo="<?php echo $prodotto['prezzo']; ?>">AGGIUNGI</button></div>
                 </div>
             <?php endforeach; ?>
         </section>
