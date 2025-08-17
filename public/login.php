@@ -10,6 +10,12 @@ $error_message = '';
 $success_message = '';
 $form_to_display = 'login';
 
+$show_admin_choice = false;
+if (isset($_SESSION['admin_choice_required']) && $_SESSION['admin_choice_required']) {
+    $show_admin_choice = true;
+    unset($_SESSION['admin_choice_required']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['login_submit'])) {
         $email = trim($_POST['email']);
@@ -26,12 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $user['id_utente'];
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_role'] = $user['ruolo'];
+
                 if ($user['ruolo'] === 'venditore') {
-                    header('Location: admin/dashboard.php');
+                    $_SESSION['admin_choice_required'] = true;
+                    header('Location: login.php');
+                    exit;
                 } else {
                     header('Location: order.php');
+                    exit;
                 }
-                exit;
             } else {
                 $error_message = 'Credenziali non valide.';
             }
@@ -139,6 +148,18 @@ include_once __DIR__ . '/../templates/header.php';
         </div>
     </div>
 </main>
+
+<?php if ($show_admin_choice): ?>
+    <div class="choice-overlay">
+        <div class="choice-card">
+            <h2>Entrare come amministratore?</h2>
+            <div class="choice-actions">
+                <a href="admin/dashboard.php" class="choice-btn btn-admin">Sì</a>
+                <a href="login_as_client.php" class="choice-btn btn-client">No / Continua come Cliente</a>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <?php include_once __DIR__ . '/../templates/footer.php'; ?>
 <script>

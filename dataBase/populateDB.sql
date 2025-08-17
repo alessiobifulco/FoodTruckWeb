@@ -3,7 +3,7 @@ USE `FoodTruckDB`;
 -- Inserisce i nuovi utenti con password semplici e già criptate (hashate)
 INSERT INTO `Utenti` (`email`, `password`, `ruolo`, `attivo`, `primo_ordine_effettuato`) VALUES
 ('cliente1@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'cliente', TRUE, FALSE),
-('venditore@campus.it', '$2y$10$sW.7e8f9g0h1i2j3k4l5m.oP.q6r7s8t9u0v1w2x3y4z5A6', 'venditore', TRUE, FALSE),
+('venditore@campus.it', '2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'venditore', TRUE, FALSE),
 ('prova@prova.it', '$2y$10$wI4p.h8v/2xG8h.Lg2f7a.Xg.S3h.9j.Zg.Yg.S3h.9j.Zg.Yg.S', 'cliente', TRUE, FALSE);
 
 -- Popolamento Ingredienti
