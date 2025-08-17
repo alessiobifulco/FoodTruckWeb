@@ -154,7 +154,7 @@ include_once __DIR__ . '/../templates/header.php';
         <div class="choice-card">
             <h2>Entrare come amministratore?</h2>
             <div class="choice-actions">
-                <a href="admin/dashboard.php" class="choice-btn btn-admin">Sì</a>
+                <a href="admin.php" class="choice-btn btn-admin">Sì</a>
                 <a href="login_as_client.php" class="choice-btn btn-client">No / Continua come Cliente</a>
             </div>
         </div>
