@@ -2,10 +2,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('orderDetailsModal');
     if (modal) {
         const closeBtn = modal.querySelector('.close-btn');
-        const closeModal = () => { modal.style.display = 'none'; };
+        const closeModal = () => {
+            modal.style.display = 'none';
+        };
+
         closeBtn.addEventListener('click', closeModal);
+
         window.addEventListener('click', (event) => {
-            if (event.target == modal) closeModal();
+            if (event.target == modal) {
+                closeModal();
+            }
         });
 
         document.querySelectorAll('.view-details-btn').forEach(button => {
@@ -23,18 +29,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             if (data.products && Array.isArray(data.products)) {
                                 data.products.forEach(product => {
                                     const li = document.createElement('li');
-                                    let productText = `${product.quantita} x ${product.nome} (@ ${parseFloat(product.prezzo_unitario_al_momento_ordine).toFixed(2)} €)`;
-
+                                    let productText = `${product.quantita} x ${product.nome} - ${parseFloat(product.prezzo_unitario_al_momento_ordine).toFixed(2)} €`;
                                     if (product.ingredienti && product.ingredienti.length > 0) {
                                         const ingredients = product.ingredienti.map(ing => ing.nome).join(', ');
                                         productText += `<br><small class="product-ingredients">Ingredienti: ${ingredients}</small>`;
                                     }
-
                                     li.innerHTML = productText;
                                     productList.appendChild(li);
                                 });
                             }
-                            modal.style.display = 'block';
+                            modal.style.display = 'flex';
                         } else {
                             alert('Dettagli dell\'ordine non trovati.');
                         }

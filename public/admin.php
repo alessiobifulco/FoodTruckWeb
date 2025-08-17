@@ -8,6 +8,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'venditore') {
     exit();
 }
 
+if (isset($_GET['rimuovi_ordine'])) {
+    $order_id = intval($_GET['rimuovi_ordine']);
+    $stmt = $conn->prepare("UPDATE Ordini SET nascosto_al_venditore = TRUE WHERE id_ordine = ?");
+    $stmt->bind_param("i", $order_id);
+    $stmt->execute();
+    header('Location: admin.php');
+    exit();
+}
+
 if (isset($_GET['action']) && $_GET['action'] === 'get_details' && isset($_GET['id'])) {
     if (!is_numeric($_GET['id'])) {
         http_response_code(400);
@@ -19,15 +28,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_details' && isset($_GET['
     $stmt->bind_param("i", $order_id);
     $stmt->execute();
     $main_details = $stmt->get_result()->fetch_assoc();
-
     if ($main_details) {
         $response['details'] = $main_details;
-
-        $sql_products = "SELECT COALESCE(do.nome_personalizzato, p.nome) AS nome, do.quantita, do.prezzo_unitario_al_momento_ordine 
-                         FROM DettagliOrdine do 
-                         LEFT JOIN Prodotti p ON do.id_prodotto = p.id_prodotto 
-                         WHERE do.id_ordine = ?";
-
+        $sql_products = "SELECT COALESCE(do.nome_personalizzato, p.nome, 'Prodotto eliminato') AS nome, do.quantita, do.prezzo_unitario_al_momento_ordine FROM DettagliOrdine do LEFT JOIN Prodotti p ON do.id_prodotto = p.id_prodotto WHERE do.id_ordine = ?";
         $stmt_products = $conn->prepare($sql_products);
         $stmt_products->bind_param("i", $order_id);
         $stmt_products->execute();
@@ -77,21 +80,19 @@ function time_ago($datetime)
     $seconds = $time_difference;
     $minutes = round($seconds / 60);
     $hours = round($seconds / 3600);
-    $days = round($seconds / 86400);
     if ($seconds <= 60) return "adesso";
     if ($minutes <= 60) return ($minutes == 1) ? "un minuto fa" : "$minutes minuti fa";
-    if ($hours <= 24) return ($hours == 1) ? "un'ora fa" : "$hours ore fa";
-    return ($days == 1) ? "ieri" : "$days giorni fa";
+    return ($hours == 1) ? "un'ora fa" : "$hours ore fa";
 }
 
 $ordini = [];
-$sql = "SELECT o.id_ordine, o.data_ordine, o.aula_consegna, o.stato, GROUP_CONCAT(COALESCE(do.nome_personalizzato, p.nome) SEPARATOR ', ') AS prodotti
+$sql = "SELECT o.id_ordine, o.data_ordine, o.stato, GROUP_CONCAT(COALESCE(do.nome_personalizzato, p.nome, 'Prodotto eliminato') SEPARATOR ', ') AS prodotti
         FROM Ordini o 
         JOIN DettagliOrdine do ON o.id_ordine = do.id_ordine 
         LEFT JOIN Prodotti p ON do.id_prodotto = p.id_prodotto
-        WHERE DATE(o.data_ordine) = CURDATE()
+        WHERE DATE(o.data_ordine) = CURDATE() AND o.nascosto_al_venditore = FALSE
         GROUP BY o.id_ordine 
-        ORDER BY FIELD(o.stato, 'ricevuto', 'in_preparazione', 'in_consegna'), o.data_ordine DESC";
+        ORDER BY FIELD(o.stato, 'ricevuto', 'in_preparazione', 'in_consegna', 'consegnato', 'annullato'), o.data_ordine DESC";
 $result = $conn->query($sql);
 if ($result) {
     $ordini = $result->fetch_all(MYSQLI_ASSOC);
@@ -131,26 +132,29 @@ include_once __DIR__ . '/../templates/header.php';
                                 $next_status = '';
                                 $button_text = '';
                                 $button_class = 'btn-secondary';
-                                switch ($ordine['stato']) {
-                                    case 'ricevuto':
-                                        $next_status = 'in_preparazione';
-                                        $button_text = 'In Preparazione';
-                                        break;
-                                    case 'in_preparazione':
-                                        $next_status = 'in_consegna';
-                                        $button_text = 'In Consegna';
-                                        $button_class = 'btn-primary';
-                                        break;
-                                    case 'in_consegna':
-                                        $next_status = 'consegnato';
-                                        $button_text = 'Consegnato';
-                                        $button_class = 'btn-primary';
-                                        break;
+                                if ($ordine['stato'] !== 'consegnato' && $ordine['stato'] !== 'annullato') {
+                                    switch ($ordine['stato']) {
+                                        case 'ricevuto':
+                                            $next_status = 'in_preparazione';
+                                            $button_text = 'In Preparazione';
+                                            break;
+                                        case 'in_preparazione':
+                                            $next_status = 'in_consegna';
+                                            $button_text = 'In Consegna';
+                                            $button_class = 'btn-primary';
+                                            break;
+                                        case 'in_consegna':
+                                            $next_status = 'consegnato';
+                                            $button_text = 'Consegnato';
+                                            $button_class = 'btn-primary';
+                                            break;
+                                    }
                                 }
                                 if ($next_status):
                                 ?>
                                     <button class="btn <?php echo $button_class; ?> update-status-btn" data-order-id="<?php echo $ordine['id_ordine']; ?>" data-new-status="<?php echo $next_status; ?>"><?php echo $button_text; ?></button>
                                 <?php endif; ?>
+                                <a href="admin.php?rimuovi_ordine=<?php echo $ordine['id_ordine']; ?>" class="btn btn-remove" onclick="return confirm('Sei sicuro di voler rimuovere questo ordine dalla vista?')">Rimuovi</a>
                             </div>
                         </div>
                     </div>
@@ -161,9 +165,9 @@ include_once __DIR__ . '/../templates/header.php';
     <section class="card">
         <h2>Gestione</h2>
         <div class="management-buttons">
-            <a href="admin_menu.php" class="management-btn">Gestisci Listino Prodotti</a>
+            <a href="admin_menu.php" class="management-btn">Gestisci Prodotti</a>
+            <a href="admin_ingredients.php" class="management-btn">Gestisci Ingredienti</a>
             <a href="#" class="management-btn">Gestisci Messaggi</a>
-            <a href="#" class="management-btn">Gestisci Notifiche</a>
         </div>
     </section>
 </div>
