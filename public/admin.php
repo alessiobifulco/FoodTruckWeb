@@ -92,7 +92,7 @@ $sql = "SELECT o.id_ordine, o.data_ordine, o.stato, GROUP_CONCAT(COALESCE(do.nom
         LEFT JOIN Prodotti p ON do.id_prodotto = p.id_prodotto
         WHERE DATE(o.data_ordine) = CURDATE() AND o.nascosto_al_venditore = FALSE
         GROUP BY o.id_ordine 
-        ORDER BY FIELD(o.stato, 'ricevuto', 'in_preparazione', 'in_consegna', 'consegnato', 'annullato'), o.data_ordine DESC";
+        ORDER BY FIELD(o.stato, 'ricevuto', 'in_preparazione', 'in_consegna'), o.data_ordine DESC";
 $result = $conn->query($sql);
 if ($result) {
     $ordini = $result->fetch_all(MYSQLI_ASSOC);
@@ -102,7 +102,6 @@ $page_title = "Dashboard Venditore";
 include_once __DIR__ . '/../templates/header.php';
 ?>
 <link rel="stylesheet" href="css/admin.css">
-
 <div class="dashboard-container">
     <h1>Dashboard Venditore</h1>
     <section class="card">
@@ -165,13 +164,12 @@ include_once __DIR__ . '/../templates/header.php';
     <section class="card">
         <h2>Gestione</h2>
         <div class="management-buttons">
-            <a href="admin_menu.php" class="management-btn">Gestisci Prodotti</a>
-            <a href="admin_ingredients.php" class="management-btn">Gestisci Ingredienti</a>
-            <a href="#" class="management-btn">Gestisci Messaggi</a>
+            <a href="admin_menu.php" class="management-btn">Gestisci Menu</a>
+            <a href="admin_message.php" class="management-btn">Visualizza Messaggi</a>
+            <a href="admin_notification.php" class="management-btn">Visualizza Notifiche</a>
         </div>
     </section>
 </div>
-
 <div id="orderDetailsModal" class="modal">
     <div class="modal-content">
         <span class="close-btn">&times;</span>
@@ -181,6 +179,5 @@ include_once __DIR__ . '/../templates/header.php';
         <ul id="modalProductList"></ul>
     </div>
 </div>
-
 <script src="js/admin.js" defer></script>
 <?php include_once __DIR__ . '/../templates/footer.php'; ?>
