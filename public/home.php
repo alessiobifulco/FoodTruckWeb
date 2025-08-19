@@ -25,10 +25,10 @@ include_once __DIR__ . '/../templates/header.php';
     <h1 class="hero-main-title">Food Truck</h1>
     <div class="hero-panel">
         <ul class="promo-list">
-            <li><i class="fas fa-shipping-fast"></i><span>Consegna gratuita sul tuo primo ordine!</span></li>
-            <li><i class="fas fa-tag"></i><span>Panino con cotoletta a soli 3.50 euro!</span></li>
-            <li><i class="fas fa-motorcycle"></i><span>Ordina e ricevi direttamente in aula!</span></li>
-            <li><i class="far fa-clock"></i><span>Ordina il giorno prima per non pensarci troppo!</span></li>
+            <li><span class="fas fa-shipping-fast" aria-hidden="true"></span><span>Consegna gratuita sul tuo primo ordine!</span></li>
+            <li><span class="fas fa-tag" aria-hidden="true"></span><span>Panino con cotoletta a soli 3.50 euro!</span></li>
+            <li><span class="fas fa-motorcycle" aria-hidden="true"></span><span>Ordina e ricevi direttamente in aula!</span></li>
+            <li><span class="far fa-clock" aria-hidden="true"></span><span>Ordina il giorno prima per non pensarci troppo!</span></li>
         </ul>
         <div class="hero-cta">
             <p>Registrati o accedi per iniziare l'ordine</p>
@@ -85,9 +85,12 @@ include_once __DIR__ . '/../templates/header.php';
 
             <form id="homepage-contact-form" action="process_contact.php" method="POST" class="contact-form">
                 <input type="hidden" name="is_ajax" value="1">
-                <input type="text" name="name" placeholder="Il tuo Nome" required>
-                <input type="email" name="email" placeholder="La tua Email" required>
-                <textarea name="message" rows="4" placeholder="Il tuo Messaggio" required></textarea>
+                <label for="name-input" class="visually-hidden">Il tuo Nome</label>
+                <input type="text" id="name-input" name="name" placeholder="Il tuo Nome" required>
+                <label for="email-input" class="visually-hidden">La tua Email</label>
+                <input type="email" id="email-input" name="email" placeholder="La tua Email" required>
+                <label for="message-textarea" class="visually-hidden">Il tuo Messaggio</label>
+                <textarea id="message-textarea" name="message" rows="4" placeholder="Il tuo Messaggio" required></textarea>
                 <button type="submit" class="btn-submit">Invia</button>
             </form>
             <p class="footer-summary-text">Di fianco all'università • Dal lunedì al venerdì • Disponibile solo a pranzo</p>

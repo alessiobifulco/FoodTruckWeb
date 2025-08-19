@@ -55,15 +55,25 @@ try {
     $id_ordine = $stmt_ordine->insert_id;
     $stmt_ordine->close();
 
-    $stmt_dettagli = $conn->prepare("INSERT INTO DettagliOrdine (id_ordine, id_prodotto, nome_personalizzato, quantita, prezzo_unitario_al_momento_ordine) VALUES (?, ?, ?, 1, ?)");
-    foreach ($cart as $item) {
-        $id_prodotto = (isset($item['id']) && is_numeric($item['id'])) ? $item['id'] : null;
-        $nome_personalizzato = (isset($item['id']) && is_numeric($item['id'])) ? null : $item['nome'];
+    $stmt_dettagli_prodotto = $conn->prepare("INSERT INTO DettagliOrdine (id_ordine, id_prodotto, quantita, prezzo_unitario_al_momento_ordine) VALUES (?, ?, 1, ?)");
+    $stmt_dettagli_personalizzato = $conn->prepare("INSERT INTO DettagliOrdine (id_ordine, nome_personalizzato, quantita, prezzo_unitario_al_momento_ordine) VALUES (?, ?, 1, ?)");
 
-        $stmt_dettagli->bind_param("iisd", $id_ordine, $id_prodotto, $nome_personalizzato, $item['prezzo']);
-        $stmt_dettagli->execute();
+    foreach ($cart as $item) {
+        $is_custom = !is_numeric($item['id']);
+        
+        if ($is_custom) {
+            $nome_personalizzato = $item['nome'];
+            $stmt_dettagli_personalizzato->bind_param("isd", $id_ordine, $nome_personalizzato, $item['prezzo']);
+            $stmt_dettagli_personalizzato->execute();
+        } else {
+            $id_prodotto = (int)$item['id'];
+            $stmt_dettagli_prodotto->bind_param("iid", $id_ordine, $id_prodotto, $item['prezzo']);
+            $stmt_dettagli_prodotto->execute();
+        }
     }
-    $stmt_dettagli->close();
+    
+    $stmt_dettagli_prodotto->close();
+    $stmt_dettagli_personalizzato->close();
 
     if (!$primo_ordine_effettuato) {
         $stmt_update_user = $conn->prepare("UPDATE Utenti SET primo_ordine_effettuato = TRUE WHERE id_utente = ?");
@@ -84,3 +94,4 @@ try {
     echo json_encode(['success' => false, 'message' => 'Errore del server durante il salvataggio dell\'ordine.']);
     exit;
 }
+?>

@@ -1,23 +1,52 @@
-/* =================================
-   Pagina Menu (menu.css)
-==================================== */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .menu-page-container {
-    display: flex;
-    gap: 30px;
+    display: block;
     max-width: 1200px;
     margin: 30px auto;
     padding: 0 20px;
-    align-items: flex-start;
+}
+
+@media (min-width: 992px) {
+    .menu-page-container {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+    }
 }
 
 .product-list-container {
-    flex: 2;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+@media (min-width: 992px) {
+    .product-list-container {
+        flex: 2;
+        margin-bottom: 0;
+    }
 }
 
 .cart-container {
-    flex: 1;
+    width: 100%;
     position: sticky;
     top: 90px;
+}
+
+@media (min-width: 992px) {
+    .cart-container {
+        flex: 1;
+    }
 }
 
 .time-selection-menu {
@@ -112,7 +141,7 @@
     margin-bottom: 20px;
 }
 
-.search-bar-container i {
+.search-bar-container span {
     position: absolute;
     left: 15px;
     top: 50%;
@@ -138,6 +167,12 @@
     position: sticky;
     top: 70px;
     z-index: 100;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.category-nav a {
+    flex-shrink: 0;
 }
 
 .category-link {
@@ -220,6 +255,12 @@
     background-color: #e9ecef;
 }
 
+.add-to-cart-btn:focus,
+.open-overlay-btn:focus {
+    outline: 2px solid #343a40;
+    outline-offset: 2px;
+}
+
 .cart-card {
     background-color: #f8f9fa;
     border-radius: 12px;
@@ -244,7 +285,6 @@
     padding: 20px 0;
 }
 
-/* MODIFICHE PER ALLINEAMENTO CARRELLO */
 .cart-item {
     display: flex;
     justify-content: space-between;
@@ -272,7 +312,6 @@
 
 .cart-item-price {
     width: 60px;
-    /* Larghezza fissa per allineare i prezzi */
     text-align: right;
     font-weight: bold;
 }
@@ -291,7 +330,10 @@
     color: #a71d2a;
 }
 
-/* FINE MODIFICHE */
+.remove-item-btn:focus {
+    outline: 2px solid #dc3545;
+    outline-offset: 2px;
+}
 
 .cart-summary {
     margin-top: 20px;
@@ -332,6 +374,11 @@
     background-color: #555;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-checkout:focus {
+    outline: 2px solid #343a40;
+    outline-offset: 2px;
 }
 
 .btn-checkout:disabled {
@@ -379,6 +426,11 @@ body.overlay-open {
     font-size: 2.5rem;
     cursor: pointer;
     color: #aaa;
+}
+
+.close-btn:focus {
+    outline: 2px solid #343a40;
+    outline-offset: 2px;
 }
 
 .overlay-content h3 {

@@ -22,7 +22,7 @@ $page_title = $page_title ?? 'Food Truck App';
     <header class="header-fixed-top">
         <nav class="header-nav">
             <div class="header-left">
-                <a href="index.php" aria-label="Torna alla Home"><i class="fas fa-truck-moving"></i></a>
+                <a href="index.php" aria-label="Torna alla Home"><span class="fas fa-truck-moving" aria-hidden="true"></span></a>
             </div>
             <div class="header-center">
                 <a href="index.php">Food Truck</a>
@@ -30,16 +30,16 @@ $page_title = $page_title ?? 'Food Truck App';
             <div class="header-right">
                 <?php if ($is_logged_in): ?>
                     <div class="user-menu-container">
-                        <a href="account.php" aria-label="Profilo Utente"><i class="fas fa-user-circle"></i></a>
+                        <a href="account.php" aria-label="Profilo Utente"><span class="fas fa-user-circle" aria-hidden="true"></span></a>
                         <div class="user-dropdown">
                             <a href="account.php">Il Mio Account</a>
                             <a href="logout.php">Disconnetti</a>
                         </div>
                     </div>
-                    <a href="cart.php" class="header-icon-link" aria-label="Carrello"><i class="fas fa-shopping-cart"></i></a>
+                    <a href="cart.php" class="header-icon-link" aria-label="Carrello"><span class="fas fa-shopping-cart" aria-hidden="true"></span></a>
                 <?php else: ?>
-                    <a href="login.php" aria-label="Accedi o Registrati"><i class="fas fa-user-circle"></i></a>
-                    <a href="login.php" aria-label="Carrello"><i class="fas fa-shopping-cart"></i></a>
+                    <a href="login.php" aria-label="Accedi o Registrati"><span class="fas fa-user-circle" aria-hidden="true"></span></a>
+                    <a href="login.php" aria-label="Carrello"><span class="fas fa-shopping-cart" aria-hidden="true"></span></a>
                 <?php endif; ?>
             </div>
         </nav>

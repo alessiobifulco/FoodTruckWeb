@@ -49,12 +49,12 @@ include_once __DIR__ . '/../templates/header.php';
             <input type="hidden" name="action" value="add_ingredient">
             <div class="form-row">
                 <div class="form-group flex-2">
-                    <label>Nome Ingrediente:</label>
-                    <input type="text" name="nome" required>
+                    <label for="add_ing_nome">Nome Ingrediente:</label>
+                    <input type="text" name="nome" id="add_ing_nome" required>
                 </div>
                 <div class="form-group flex-1">
-                    <label>Categoria:</label>
-                    <select name="categoria" required>
+                    <label for="add_ing_categoria">Categoria:</label>
+                    <select name="categoria" id="add_ing_categoria" required>
                         <option value="pane">Pane</option>
                         <option value="proteina">Proteina</option>
                         <option value="contorno">Contorno</option>
@@ -71,21 +71,21 @@ include_once __DIR__ . '/../templates/header.php';
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Categoria</th>
-                    <th>Azioni</th>
+                    <th data-label="ID">ID</th>
+                    <th data-label="Nome">Nome</th>
+                    <th data-label="Categoria">Categoria</th>
+                    <th data-label="Azioni">Azioni</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($ingredienti as $ing): ?>
                     <tr>
-                        <td><?= $ing['id_ingrediente'] ?></td>
-                        <td><?= htmlspecialchars($ing['nome']) ?></td>
-                        <td><?= ucfirst($ing['categoria_ingrediente']) ?></td>
-                        <td>
+                        <td data-label="ID"><?= $ing['id_ingrediente'] ?></td>
+                        <td data-label="Nome"><?= htmlspecialchars($ing['nome']) ?></td>
+                        <td data-label="Categoria"><?= ucfirst($ing['categoria_ingrediente']) ?></td>
+                        <td data-label="Azioni">
                             <button class="btn btn-edit" data-modal-id="modal-ing-<?= $ing['id_ingrediente'] ?>">Modifica</button>
-                            <a href="admin_ingredients.php?delete=<?= $ing['id_ingrediente'] ?>" class="btn btn-remove" onclick="return confirm('Sei sicuro?')">Rimuovi</a>
+                            <a href="admin_ingredients.php?delete=<?= $ing['id_ingrediente'] ?>" class="btn btn-remove" onclick="return confirm('Sei sicuro di voler rimuovere questo ingrediente?')">Rimuovi</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -103,12 +103,12 @@ include_once __DIR__ . '/../templates/header.php';
                 <input type="hidden" name="action" value="edit_ingredient">
                 <input type="hidden" name="id" value="<?= $ing['id_ingrediente'] ?>">
                 <div class="form-group">
-                    <label>Nome:</label>
-                    <input type="text" name="nome" value="<?= htmlspecialchars($ing['nome']) ?>" required>
+                    <label for="edit_ing_nome_<?= $ing['id_ingrediente'] ?>">Nome:</label>
+                    <input type="text" name="nome" id="edit_ing_nome_<?= $ing['id_ingrediente'] ?>" value="<?= htmlspecialchars($ing['nome']) ?>" required>
                 </div>
                 <div class="form-group">
-                    <label>Categoria:</label>
-                    <select name="categoria" required>
+                    <label for="edit_ing_cat_<?= $ing['id_ingrediente'] ?>">Categoria:</label>
+                    <select name="categoria" id="edit_ing_cat_<?= $ing['id_ingrediente'] ?>" required>
                         <option value="pane" <?= $ing['categoria_ingrediente'] == 'pane' ? 'selected' : '' ?>>Pane</option>
                         <option value="proteina" <?= $ing['categoria_ingrediente'] == 'proteina' ? 'selected' : '' ?>>Proteina</option>
                         <option value="contorno" <?= $ing['categoria_ingrediente'] == 'contorno' ? 'selected' : '' ?>>Contorno</option>

@@ -7,11 +7,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const cartForm = document.getElementById('cart-form');
     const overlay = document.getElementById('componi-panino-overlay');
 
+    const searchInput = document.getElementById('search-input');
+    const productItems = document.querySelectorAll('.product-item');
+
     let cart = serverCart || JSON.parse(sessionStorage.getItem('foodTruckCart')) || [];
 
     function saveCartAndSync() {
         sessionStorage.setItem('foodTruckCart', JSON.stringify(cart));
-        fetch('api/update_cart_simple.php', {
+        fetch('/FOODTRUCKWEB/public/update_cart.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(cart)
@@ -35,6 +38,27 @@ document.addEventListener('DOMContentLoaded', function () {
             summaryTotalPrice.textContent = `${totalPrice.toFixed(2).replace('.', ',')} €`;
         }
         goToCheckoutBtn.disabled = cart.length === 0;
+    }
+
+    function filterProducts(searchTerm) {
+        const searchText = searchTerm.toLowerCase();
+
+        productItems.forEach(item => {
+            const productName = item.querySelector('.product-details h3').textContent.toLowerCase();
+            const productDescription = item.querySelector('.product-details p') ? item.querySelector('.product-details p').textContent.toLowerCase() : '';
+
+            if (productName.includes(searchText) || productDescription.includes(searchText)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('keyup', (e) => {
+            filterProducts(e.target.value);
+        });
     }
 
     document.querySelector('.product-list-container').addEventListener('click', function (e) {

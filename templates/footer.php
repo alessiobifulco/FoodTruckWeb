@@ -10,10 +10,10 @@
     <div class="footer-bottom">
         <span>Copyright &copy; <?php echo date('Y'); ?> Food Truck. All Rights Reserved.</span>
         <div class="footer-social">
-            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" aria-label="Facebook"><span class="fab fa-facebook-f" aria-hidden="true"></span></a>
+            <a href="#" aria-label="Instagram"><span class="fab fa-instagram" aria-hidden="true"></span></a>
+            <a href="#" aria-label="TikTok"><span class="fab fa-tiktok" aria-hidden="true"></span></a>
+            <a href="#" aria-label="YouTube"><span class="fab fa-youtube" aria-hidden="true"></span></a>
         </div>
     </div>
 </footer>

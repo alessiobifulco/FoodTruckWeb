@@ -176,7 +176,7 @@ include_once __DIR__ . '/../templates/header.php';
 <div id="success-message" class="success-container" style="display: none;">
     <div class="success-card">
         <div class="success-icon">
-            <i class="fas fa-check-circle"></i>
+            <span class="fas fa-check-circle" aria-hidden="true"></span>
         </div>
         <h1>Pagamento andato a buon fine!</h1>
         <p>Il tuo ordine è stato ricevuto e stiamo già iniziando a prepararlo. Riceverai una notifica per ogni aggiornamento.</p>

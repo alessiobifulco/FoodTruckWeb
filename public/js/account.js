@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (!action || !notificationId) return;
 
-                fetch('/FOODTRACKWEB/public/manage_notification.php', {
+                fetch('/FOODTRUCKWEB/public/manage_notification.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: action, notification_id: notificationId })

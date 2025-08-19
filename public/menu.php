@@ -34,7 +34,7 @@ if ($result_ingredienti) {
 <link rel="stylesheet" href="css/menu.css">
 <main class="menu-page-container">
     <div class="product-list-container">
-        <div class="search-bar-container"><i class="fas fa-search"></i><input type="search" placeholder="Cerca un prodotto..."></div>
+        <div class="search-bar-container"><label for="search-input" class="visually-hidden">Cerca un prodotto</label><span class="fas fa-search" aria-hidden="true"></span><input type="search" id="search-input" placeholder="Cerca un prodotto..."></div>
         <nav class="category-nav">
             <a href="#panini" class="category-link active">Panini</a>
             <a href="#pizzette" class="category-link">Pizzette</a>
@@ -46,7 +46,7 @@ if ($result_ingredienti) {
             <h2>Panini</h2>
             <?php foreach ($prodotti_per_categoria['panino_predefinito'] ?? [] as $prodotto): ?>
                 <div class="product-item">
-                    <img src="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>" alt="" class="product-item-image">
+                    <img src="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>" alt="<?php echo htmlspecialchars($prodotto['nome']); ?>" class="product-item-image">
                     <div class="product-details">
                         <h3><?php echo htmlspecialchars($prodotto['nome']); ?></h3>
                         <p><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
@@ -60,7 +60,7 @@ if ($result_ingredienti) {
             <h2>Pizzette</h2>
             <?php foreach ($prodotti_per_categoria['pizzetta'] ?? [] as $prodotto): ?>
                 <div class="product-item">
-                    <img src="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>" alt="" class="product-item-image">
+                    <img src="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>" alt="<?php echo htmlspecialchars($prodotto['nome']); ?>" class="product-item-image">
                     <div class="product-details">
                         <h3><?php echo htmlspecialchars($prodotto['nome']); ?></h3>
                         <p><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
@@ -97,7 +97,7 @@ if ($result_ingredienti) {
             <h2>Bevande</h2>
             <?php foreach ($prodotti_per_categoria['bevanda'] ?? [] as $prodotto): ?>
                 <div class="product-item">
-                    <img src="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>" alt="" class="product-item-image">
+                    <img src="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>" alt="<?php echo htmlspecialchars($prodotto['nome']); ?>" class="product-item-image">
                     <div class="product-details">
                         <h3><?php echo htmlspecialchars($prodotto['nome']); ?></h3>
                         <p><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
@@ -133,25 +133,25 @@ if ($result_ingredienti) {
             <div class="ingredient-category" data-categoria="pane">
                 <h4>Scegli il Pane <span class="required-badge">1 Obbligatorio</span></h4>
                 <?php foreach ($ingredienti_per_categoria['pane'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="radio" name="pane" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option" for="pane-<?php echo htmlspecialchars(str_replace(' ', '-', $ingrediente['nome'])); ?>"><input type="radio" name="pane" id="pane-<?php echo htmlspecialchars(str_replace(' ', '-', $ingrediente['nome'])); ?>" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
             <div class="ingredient-category" data-categoria="proteina">
                 <h4 id="proteina-title">Scegli la Proteina</h4>
                 <?php foreach ($ingredienti_per_categoria['proteina'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="proteina[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option" for="proteina-<?php echo htmlspecialchars(str_replace(' ', '-', $ingrediente['nome'])); ?>"><input type="checkbox" name="proteina[]" id="proteina-<?php echo htmlspecialchars(str_replace(' ', '-', $ingrediente['nome'])); ?>" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
             <div class="ingredient-category" data-categoria="contorno">
                 <h4 id="contorno-title">Scegli il Contorno</h4>
                 <?php foreach ($ingredienti_per_categoria['contorno'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="contorno[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option" for="contorno-<?php echo htmlspecialchars(str_replace(' ', '-', $ingrediente['nome'])); ?>"><input type="checkbox" name="contorno[]" id="contorno-<?php echo htmlspecialchars(str_replace(' ', '-', $ingrediente['nome'])); ?>" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
             <div class="ingredient-category" data-categoria="salsa">
                 <h4 id="salsa-title">Scegli la Salsa</h4>
                 <?php foreach ($ingredienti_per_categoria['salsa'] ?? [] as $ingrediente): ?>
-                    <label class="ingredient-option"><input type="checkbox" name="salsa[]" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
+                    <label class="ingredient-option" for="salsa-<?php echo htmlspecialchars(str_replace(' ', '-', $ingrediente['nome'])); ?>"><input type="checkbox" name="salsa[]" id="salsa-<?php echo htmlspecialchars(str_replace(' ', '-', $ingrediente['nome'])); ?>" data-nome="<?php echo htmlspecialchars($ingrediente['nome']); ?>"> <span><?php echo htmlspecialchars($ingrediente['nome']); ?></span></label>
                 <?php endforeach; ?>
             </div>
         </div>
