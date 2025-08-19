@@ -11,17 +11,8 @@ $name = trim($_POST['name'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
-$is_ajax = isset($_POST['is_ajax']);
-$provenienza = $_POST['provenienza'] ?? 'contacts.php';
-$anchor = '#contact-form-section';
-
 if (empty($name) || empty($email) || empty($message) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    if ($is_ajax) {
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => 'Per favore, compila tutti i campi correttamente.']);
-    } else {
-        header('Location: ' . $provenienza . '?status=error' . $anchor);
-    }
+    header('Location: index.php?status=error#contact-form-section');
     exit;
 }
 
@@ -31,20 +22,10 @@ try {
     $stmt->execute();
     $stmt->close();
 
-    if ($is_ajax) {
-        header('Content-Type: application/json');
-        echo json_encode(['success' => true, 'message' => 'Messaggio inviato con successo!']);
-    } else {
-        header('Location: ' . $provenienza . '?status=success' . $anchor);
-    }
+    header('Location: confirmation.php');
     exit;
 } catch (Exception $e) {
     error_log("Errore salvataggio messaggio: " . $e->getMessage());
-    if ($is_ajax) {
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => 'Errore del server. Riprova più tardi.']);
-    } else {
-        header('Location: ' . $provenienza . '?status=dberror' . $anchor);
-    }
+    header('Location: index.php?status=dberror#contact-form-section');
     exit;
 }

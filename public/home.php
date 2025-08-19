@@ -23,7 +23,7 @@ include_once __DIR__ . '/../templates/header.php';
 
 <section class="hero-container">
     <h1 class="hero-main-title">Food Truck</h1>
-    <div class="hero-panel">
+    <article class="hero-panel">
         <ul class="promo-list">
             <li><span class="fas fa-shipping-fast" aria-hidden="true"></span><span>Consegna gratuita sul tuo primo ordine!</span></li>
             <li><span class="fas fa-tag" aria-hidden="true"></span><span>Panino con cotoletta a soli 3.50 euro!</span></li>
@@ -34,38 +34,38 @@ include_once __DIR__ . '/../templates/header.php';
             <p>Registrati o accedi per iniziare l'ordine</p>
             <a href="<?php echo $is_logged_in ? 'order.php' : 'login.php'; ?>" class="btn-hero">Inizia a ordinare!</a>
         </div>
-    </div>
+    </article>
 </section>
 
 <main class="page-container">
     <section class="menu-section">
-        <div class="menu-dark-container">
-            <div class="content-wrapper">
+        <section class="menu-dark-container">
+            <header class="content-wrapper">
                 <h2 class="menu-title">Scopri il nostro fantastico menu</h2>
                 <div class="products-scroller" data-animated="true">
-                    <div class="scroller-inner">
+                    <ul class="scroller-inner">
                         <?php foreach (array_merge($tutti_i_prodotti, $tutti_i_prodotti) as $prodotto): ?>
-                            <div class="product-card">
+                            <li class="product-card">
                                 <img src="<?php echo htmlspecialchars($prodotto['path_immagine']); ?>" alt="<?php echo htmlspecialchars($prodotto['nome']); ?>">
                                 <div class="product-info">
                                     <h3 class="product-name"><?php echo htmlspecialchars($prodotto['nome']); ?></h3>
                                     <p class="product-description-home"><?php echo htmlspecialchars($prodotto['descrizione']); ?></p>
                                 </div>
-                            </div>
+                            </li>
                         <?php endforeach; ?>
-                    </div>
+                    </ul>
                 </div>
-            </div>
-        </div>
+            </header>
+        </section>
         <div class="curved-separator"></div>
-        <div class="menu-light-container">
+        <section class="menu-light-container">
             <div class="content-wrapper">
-                <div class="custom-order-card">
+                <article class="custom-order-card">
                     <h3>Componi il tuo Panino!</h3>
                     <p>Scegli i tuoi ingredienti preferiti</p>
                     <a href="<?php echo $is_logged_in ? 'menu.php' : 'login.php'; ?>" class="btn-hero">Inizia a ordinare</a>
-                </div>
-                <div class="time-slots-card">
+                </article>
+                <article class="time-slots-card">
                     <h4>Le nostre fasce orarie</h4>
                     <ul>
                         <li>11:00 - 11:30</li>
@@ -73,24 +73,28 @@ include_once __DIR__ . '/../templates/header.php';
                         <li>12:00 - 12:30</li>
                         <li>12:30 - 13:00</li>
                     </ul>
-                </div>
+                </article>
             </div>
-        </div>
+        </section>
     </section>
-    <section id="contact-form-section" class="contact-section">
+    <section class="contact-section">
         <div class="content-wrapper">
             <h2 class="contact-title">Se hai qualche domanda contattaci!</h2>
-
-            <div id="form-notification"></div>
-
-            <form id="homepage-contact-form" action="process_contact.php" method="POST" class="contact-form">
-                <input type="hidden" name="is_ajax" value="1">
+            <?php
+            if (isset($_GET['status']) && $_GET['status'] == 'error') {
+                echo '<p class="error-message">Per favore, compila tutti i campi correttamente.</p>';
+            }
+            if (isset($_GET['status']) && $_GET['status'] == 'dberror') {
+                echo '<p class="error-message">Errore del server. Riprova più tardi.</p>';
+            }
+            ?>
+            <form action="process_contact.php" method="POST" class="contact-form">
                 <label for="name-input" class="visually-hidden">Il tuo Nome</label>
-                <input type="text" id="name-input" name="name" placeholder="Il tuo Nome" required>
+                <input type="text" name="name" id="name-input" placeholder="Il tuo Nome" required>
                 <label for="email-input" class="visually-hidden">La tua Email</label>
-                <input type="email" id="email-input" name="email" placeholder="La tua Email" required>
+                <input type="email" name="email" id="email-input" placeholder="La tua Email" required>
                 <label for="message-textarea" class="visually-hidden">Il tuo Messaggio</label>
-                <textarea id="message-textarea" name="message" rows="4" placeholder="Il tuo Messaggio" required></textarea>
+                <textarea name="message" id="message-textarea" rows="4" placeholder="Il tuo Messaggio" required></textarea>
                 <button type="submit" class="btn-submit">Invia</button>
             </form>
             <p class="footer-summary-text">Di fianco all'università • Dal lunedì al venerdì • Disponibile solo a pranzo</p>
