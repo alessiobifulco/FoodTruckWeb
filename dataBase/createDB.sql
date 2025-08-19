@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `Ordini` (
     `nome_ricevente` VARCHAR(100) NOT NULL,
     `cognome_ricevente` VARCHAR(100) NOT NULL,
     `note_utente` TEXT, -- NULLABLE
+    `nascosto_al_venditore` BOOLEAN NOT NULL DEFAULT FALSE, -- Aggiunto nuovo campo
     FOREIGN KEY (`id_utente`) REFERENCES `Utenti`(`id_utente`)
 );
 
@@ -66,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `DettagliOrdine` (
     `id_dettaglio` INT AUTO_INCREMENT PRIMARY KEY,
     `id_ordine` INT NOT NULL,
     `id_prodotto` INT, 
+    `nome_personalizzato` VARCHAR(255), -- Aggiunto per i panini componibili
     `tipo_panino_componibile` ENUM('normale', 'grande', 'maxi'), 
     `quantita` INT NOT NULL DEFAULT 1 CHECK (quantita >= 1),
     `prezzo_unitario_al_momento_ordine` DECIMAL(5,2) NOT NULL CHECK (prezzo_unitario_al_momento_ordine >= 0),

@@ -3,7 +3,7 @@ USE `FoodTruckDB`;
 -- Inserisce i nuovi utenti con password semplici e già criptate (hashate)
 INSERT INTO `Utenti` (`email`, `password`, `ruolo`, `attivo`, `primo_ordine_effettuato`) VALUES
 ('cliente1@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'cliente', TRUE, FALSE),
-('venditore@campus.it', '2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'venditore', TRUE, FALSE),
+('venditore@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'venditore', TRUE, FALSE),
 ('prova@prova.it', '$2y$10$wI4p.h8v/2xG8h.Lg2f7a.Xg.S3h.9j.Zg.Yg.S3h.9j.Zg.Yg.S', 'cliente', TRUE, FALSE);
 
 -- Popolamento Ingredienti
@@ -69,28 +69,4 @@ INSERT INTO `StatoFasceGiornaliere` (`id_fascia`, `data_riferimento`, `stato_gio
 (2, CURDATE(), 'piena', 10),
 (3, CURDATE(), 'disponibile', 5);
 
--- Popolamento Ordini
-INSERT INTO `Ordini` (`id_ordine`, `id_utente`, `data_ordine`, `totale`, `stato`, `fascia_oraria_consegna`, `aula_consegna`, `nome_ricevente`, `cognome_ricevente`, `note_utente`) VALUES
-(1, 1, NOW(), 6.50, 'ricevuto', '12:30 - 13:00', 'Aula G3', 'Anna', 'Rossi', NULL),
-(2, 2, NOW() - INTERVAL 1 DAY, 10.50, 'consegnato', '13:00 - 13:30', NULL, 'Marco', 'Bianchi', 'Senza salse extra');
 
--- Popolamento Dettagli Ordine
-INSERT INTO `DettagliOrdine` (`id_dettaglio`, `id_ordine`, `id_prodotto`, `quantita`, `prezzo_unitario_al_momento_ordine`) VALUES
-(1, 1, 1, 1, 4.00),
-(2, 1, 10, 1, 2.50),
-(3, 2, 4, 2, 2.50);
-INSERT INTO `DettagliOrdine` (`id_dettaglio`, `id_ordine`, `tipo_panino_componibile`, `quantita`, `prezzo_unitario_al_momento_ordine`) VALUES
-(4, 2, 'grande', 1, 5.50);
-
--- Popolamento Dettagli Panino Composto
-INSERT INTO `DettagliPaninoComposto` (`id_dettaglio_ordine`, `id_ingrediente`) VALUES
-(4, (SELECT id_ingrediente FROM Ingredienti WHERE nome = 'Pane Integrale')),
-(4, (SELECT id_ingrediente FROM Ingredienti WHERE nome = 'Prosciutto Crudo')),
-(4, (SELECT id_ingrediente FROM Ingredienti WHERE nome = 'Rucola')),
-(4, (SELECT id_ingrediente FROM Ingredienti WHERE nome = 'Maionese'));
-
--- Popolamento Notifiche
-INSERT INTO `Notifiche` (`id_utente_destinatario`, `messaggio`, `tipo_notifica`, `id_ordine_riferimento`) VALUES
-(1, 'Il tuo ordine #00001 è stato ricevuto!', 'ordine_status', 1),
-(3, 'Il tuo ordine #00002 è stato consegnato. Grazie!', 'ordine_status', 2),
-(2, 'Hai ricevuto un nuovo ordine! #00001', 'nuovo_ordine_venditore', 1);
