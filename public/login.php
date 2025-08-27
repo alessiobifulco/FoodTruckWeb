@@ -5,6 +5,9 @@ if (session_status() == PHP_SESSION_NONE) {
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/db.php';
 
+define('MAX_LOGIN_ATTEMPTS', 5);
+define('LOCKOUT_TIME', 15 * 60);
+
 $page_title = "Accedi o Registrati";
 $error_message = '';
 $success_message = '';
@@ -16,14 +19,10 @@ if (isset($_SESSION['admin_choice_required']) && $_SESSION['admin_choice_require
     unset($_SESSION['admin_choice_required']);
 }
 
-define("MAX_LOGIN_ATTEMPTS", 5);
-define("LOGIN_TIME_WINDOW_MINUTES", 30);
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['login_submit'])) {
         $email = trim($_POST['email']);
         $password = $_POST['password'];
-
         if (empty($email) || empty($password)) {
             $error_message = 'Email e password sono obbligatorie.';
         } else {
@@ -35,25 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
 
             if ($user) {
-                $user_id = $user['id_utente'];
+                $id_utente = $user['id_utente'];
 
-                $check_brute_stmt = $conn->prepare("SELECT COUNT(*) as num_attempts FROM login_attempts WHERE id_utente = ? AND orario_tentativo > (NOW() - INTERVAL ? MINUTE)");
-                $check_brute_stmt->bind_param("ii", $user_id, LOGIN_TIME_WINDOW_MINUTES);
-                $check_brute_stmt->execute();
-                $brute_result = $check_brute_stmt->get_result()->fetch_assoc();
-                $check_brute_stmt->close();
+                $stmt_attempts = $conn->prepare("SELECT COUNT(*) as num_attempts FROM login_attempts WHERE id_utente = ? AND orario_tentativo > (NOW() - INTERVAL ? SECOND)");
+                $lockout_seconds = LOCKOUT_TIME;
+                $stmt_attempts->bind_param("ii", $id_utente, $lockout_seconds);
+                $stmt_attempts->execute();
+                $result_attempts = $stmt_attempts->get_result()->fetch_assoc();
+                $stmt_attempts->close();
 
-                if ($brute_result['num_attempts'] >= MAX_LOGIN_ATTEMPTS) {
-                    $error_message = 'Account bloccato temporaneamente a causa di troppi tentativi di login falliti. Riprova più tardi.';
+                if ($result_attempts['num_attempts'] >= MAX_LOGIN_ATTEMPTS) {
+                    $error_message = "Hai superato il numero massimo di tentativi di login. L'account è bloccato temporaneamente per 15 minuti.";
                 } else {
                     if (password_verify($password, $user['password'])) {
-                        
-                        $clear_attempts_stmt = $conn->prepare("DELETE FROM login_attempts WHERE id_utente = ?");
-                        $clear_attempts_stmt->bind_param("i", $user_id);
-                        $clear_attempts_stmt->execute();
-                        $clear_attempts_stmt->close();
-
-                        session_regenerate_id(true);
+                        $stmt_clear = $conn->prepare("DELETE FROM login_attempts WHERE id_utente = ?");
+                        $stmt_clear->bind_param("i", $id_utente);
+                        $stmt_clear->execute();
+                        $stmt_clear->close();
 
                         $_SESSION['user_id'] = $user['id_utente'];
                         $_SESSION['user_email'] = $user['email'];
@@ -62,18 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($user['ruolo'] === 'venditore') {
                             $_SESSION['admin_choice_required'] = true;
                             header('Location: login.php');
-                            exit;
                         } else {
                             header('Location: order.php');
-                            exit;
                         }
+                        exit;
                     } else {
-                        
-                        $insert_attempt_stmt = $conn->prepare("INSERT INTO login_attempts (id_utente) VALUES (?)");
-                        $insert_attempt_stmt->bind_param("i", $user_id);
-                        $insert_attempt_stmt->execute();
-                        $insert_attempt_stmt->close();
-
+                        $stmt_log = $conn->prepare("INSERT INTO login_attempts (id_utente) VALUES (?)");
+                        $stmt_log->bind_param("i", $id_utente);
+                        $stmt_log->execute();
+                        $stmt_log->close();
                         $error_message = 'Credenziali non valide.';
                     }
                 }
@@ -86,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email_reg = trim($_POST['email_reg']);
         $password_reg = $_POST['password_reg'];
         $confirm_password_reg = $_POST['confirm_password_reg'];
+        
         if (empty($email_reg) || empty($password_reg) || empty($confirm_password_reg)) {
             $error_message = 'Tutti i campi sono obbligatori.';
         } elseif ($password_reg !== $confirm_password_reg) {
@@ -95,18 +90,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("s", $email_reg);
             $stmt->execute();
             $stmt->store_result();
+            
             if ($stmt->num_rows > 0) {
                 $error_message = 'Questa email è già registrata.';
             } else {
                 $hashed_password = password_hash($password_reg, PASSWORD_BCRYPT);
-                $insert_stmt = $conn->prepare("INSERT INTO Utenti (email, password, ruolo) VALUES (?, ?, 'cliente')");
-                $insert_stmt->bind_param("ss", $email_reg, $hashed_password);
+                $ruolo_cliente = 'cliente'; 
+                
+                $insert_stmt = $conn->prepare("INSERT INTO Utenti (email, password, ruolo) VALUES (?, ?, ?)");
+                $insert_stmt->bind_param("sss", $email_reg, $hashed_password, $ruolo_cliente);
+                
                 if ($insert_stmt->execute()) {
                     $new_user_id = $insert_stmt->insert_id;
 
                     $id_venditore = 2;
                     $messaggio_venditore = "Nuovo utente registrato: " . htmlspecialchars($email_reg);
                     $tipo_notifica_venditore = 'nuovo_utente';
+                    
                     $stmt_notifica = $conn->prepare("INSERT INTO Notifiche (id_utente_destinatario, messaggio, tipo_notifica) VALUES (?, ?, ?)");
                     $stmt_notifica->bind_param("iss", $id_venditore, $messaggio_venditore, $tipo_notifica_venditore);
                     $stmt_notifica->execute();
