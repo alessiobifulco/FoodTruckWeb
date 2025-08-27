@@ -8,15 +8,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'venditore') {
     exit();
 }
 
-if (isset($_GET['rimuovi_ordine'])) {
-    $order_id = intval($_GET['rimuovi_ordine']);
-    $stmt = $conn->prepare("UPDATE Ordini SET nascosto_al_venditore = TRUE WHERE id_ordine = ?");
-    $stmt->bind_param("i", $order_id);
-    $stmt->execute();
-    header('Location: admin.php');
-    exit();
-}
-
 if (isset($_GET['action']) && $_GET['action'] === 'get_details' && isset($_GET['id'])) {
     if (!is_numeric($_GET['id'])) {
         http_response_code(400);
@@ -29,12 +20,23 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_details' && isset($_GET['
     $stmt->execute();
     $main_details = $stmt->get_result()->fetch_assoc();
     if ($main_details) {
+        foreach ($main_details as $key => $value) {
+            if (is_string($value)) {
+                $main_details[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            }
+        }
         $response['details'] = $main_details;
+        
         $sql_products = "SELECT COALESCE(do.nome_personalizzato, p.nome, 'Prodotto eliminato') AS nome, do.quantita, do.prezzo_unitario_al_momento_ordine FROM DettagliOrdine do LEFT JOIN Prodotti p ON do.id_prodotto = p.id_prodotto WHERE do.id_ordine = ?";
         $stmt_products = $conn->prepare($sql_products);
         $stmt_products->bind_param("i", $order_id);
         $stmt_products->execute();
-        $products = $stmt_products->get_result()->fetch_all(MYSQLI_ASSOC);
+        $products_result = $stmt_products->get_result();
+        $products = [];
+        while ($product = $products_result->fetch_assoc()) {
+            $product['nome'] = htmlspecialchars($product['nome'], ENT_QUOTES, 'UTF-8');
+            $products[] = $product;
+        }
         $response['products'] = $products;
     }
     header('Content-Type: application/json');
@@ -51,6 +53,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmt = $conn->prepare("UPDATE Ordini SET stato = ? WHERE id_ordine = ?");
         $stmt->bind_param("si", $new_status, $order_id);
         if ($stmt->execute()) {
+            
+            $stmt_user = $conn->prepare("SELECT id_utente FROM Ordini WHERE id_ordine = ?");
+            $stmt_user->bind_param("i", $order_id);
+            $stmt_user->execute();
+            $result_user = $stmt_user->get_result()->fetch_assoc();
+            $stmt_user->close();
+
+            if ($result_user) {
+                $id_utente_destinatario = $result_user['id_utente'];
+                $stato_leggibile = str_replace('_', ' ', $new_status);
+                $messaggio = "Lo stato del tuo ordine #" . str_pad($order_id, 5, '0', STR_PAD_LEFT) . " è stato aggiornato a: " . ucfirst($stato_leggibile);
+                $tipo_notifica = 'ordine_status';
+
+                $stmt_notifica = $conn->prepare("INSERT INTO Notifiche (id_utente_destinatario, messaggio, tipo_notifica, id_ordine_riferimento) VALUES (?, ?, ?, ?)");
+                $stmt_notifica->bind_param("issi", $id_utente_destinatario, $messaggio, $tipo_notifica, $order_id);
+                $stmt_notifica->execute();
+                $stmt_notifica->close();
+            }
+
             $response = ['success' => true, 'new_status_display' => str_replace('_', ' ', $new_status)];
             $next_step = null;
             switch ($new_status) {
@@ -72,8 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit();
 }
 
-function time_ago($datetime)
-{
+function time_ago($datetime) {
     $time_ago = strtotime($datetime);
     $current_time = time();
     $time_difference = $current_time - $time_ago;
@@ -86,13 +106,18 @@ function time_ago($datetime)
 }
 
 $ordini = [];
+
 $sql = "SELECT o.id_ordine, o.data_ordine, o.stato, GROUP_CONCAT(COALESCE(do.nome_personalizzato, p.nome, 'Prodotto eliminato') SEPARATOR ', ') AS prodotti
         FROM Ordini o 
         JOIN DettagliOrdine do ON o.id_ordine = do.id_ordine 
         LEFT JOIN Prodotti p ON do.id_prodotto = p.id_prodotto
-        WHERE DATE(o.data_ordine) = CURDATE() AND o.nascosto_al_venditore = FALSE
+        WHERE 
+            (o.fascia_oraria_consegna LIKE 'Oggi%' AND DATE(o.data_ordine) = CURDATE())
+            OR
+            (o.fascia_oraria_consegna LIKE 'Domani%' AND DATE(o.data_ordine) = CURDATE() - INTERVAL 1 DAY)
         GROUP BY o.id_ordine 
         ORDER BY FIELD(o.stato, 'ricevuto', 'in_preparazione', 'in_consegna'), o.data_ordine DESC";
+
 $result = $conn->query($sql);
 if ($result) {
     $ordini = $result->fetch_all(MYSQLI_ASSOC);
@@ -153,7 +178,6 @@ include_once __DIR__ . '/../templates/header.php';
                                 ?>
                                     <button class="btn <?php echo $button_class; ?> update-status-btn" data-order-id="<?php echo $ordine['id_ordine']; ?>" data-new-status="<?php echo $next_status; ?>"><?php echo $button_text; ?></button>
                                 <?php endif; ?>
-                                <a href="admin.php?rimuovi_ordine=<?php echo $ordine['id_ordine']; ?>" class="btn btn-remove" onclick="return confirm('Sei sicuro di voler rimuovere questo ordine dalla vista?')">Rimuovi</a>
                             </div>
                         </div>
                     </div>

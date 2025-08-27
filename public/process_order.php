@@ -28,6 +28,41 @@ if (empty($cart)) {
 $conn->begin_transaction();
 
 try {
+    $product_ids = [];
+    foreach ($cart as $item) {
+        if (is_numeric($item['id'])) {
+            $product_ids[] = (int)$item['id'];
+        }
+    }
+    
+    $prices_from_db = [];
+    if (!empty($product_ids)) {
+        $ids_string = implode(',', array_fill(0, count($product_ids), '?'));
+        $types = str_repeat('i', count($product_ids));
+        $stmt_prices = $conn->prepare("SELECT id_prodotto, prezzo FROM Prodotti WHERE id_prodotto IN ($ids_string)");
+        $stmt_prices->bind_param($types, ...$product_ids);
+        $stmt_prices->execute();
+        $result_prices = $stmt_prices->get_result();
+        while ($row = $result_prices->fetch_assoc()) {
+            $prices_from_db[$row['id_prodotto']] = (float)$row['prezzo'];
+        }
+        $stmt_prices->close();
+    }
+
+    $subtotal = 0;
+    foreach ($cart as &$item) {
+        if (is_numeric($item['id'])) {
+            $id = (int)$item['id'];
+            if (isset($prices_from_db[$id])) {
+                $item['prezzo'] = $prices_from_db[$id];
+            } else {
+                throw new Exception("Prodotto con ID $id non trovato nel database.");
+            }
+        }
+        $subtotal += (float)$item['prezzo'];
+    }
+    unset($item);
+
     $stmt_user = $conn->prepare("SELECT primo_ordine_effettuato FROM Utenti WHERE id_utente = ?");
     $stmt_user->bind_param("i", $user_id);
     $stmt_user->execute();
@@ -35,10 +70,6 @@ try {
     $stmt_user->close();
 
     $costo_consegna = $primo_ordine_effettuato ? 2.00 : 0.00;
-    $subtotal = 0;
-    foreach ($cart as $item) {
-        $subtotal += $item['prezzo'];
-    }
     $total = $subtotal + $costo_consegna;
 
     $nome = $_POST['nome'];
@@ -54,6 +85,15 @@ try {
     $stmt_ordine->execute();
     $id_ordine = $stmt_ordine->insert_id;
     $stmt_ordine->close();
+    
+    $id_venditore = 2;
+    $messaggio_venditore = "Nuovo ordine ricevuto: #" . str_pad($id_ordine, 5, '0', STR_PAD_LEFT) . ".";
+    $tipo_notifica = 'nuovo_ordine_venditore';
+    
+    $stmt_notifica = $conn->prepare("INSERT INTO Notifiche (id_utente_destinatario, messaggio, tipo_notifica, id_ordine_riferimento) VALUES (?, ?, ?, ?)");
+    $stmt_notifica->bind_param("issi", $id_venditore, $messaggio_venditore, $tipo_notifica, $id_ordine);
+    $stmt_notifica->execute();
+    $stmt_notifica->close();
 
     $stmt_dettagli_prodotto = $conn->prepare("INSERT INTO DettagliOrdine (id_ordine, id_prodotto, quantita, prezzo_unitario_al_momento_ordine) VALUES (?, ?, 1, ?)");
     $stmt_dettagli_personalizzato = $conn->prepare("INSERT INTO DettagliOrdine (id_ordine, nome_personalizzato, quantita, prezzo_unitario_al_momento_ordine) VALUES (?, ?, 1, ?)");

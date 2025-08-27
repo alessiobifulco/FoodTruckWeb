@@ -23,17 +23,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     .then(data => {
                         if (data && data.details) {
                             document.getElementById('modalOrderId').textContent = `#${data.details.id_ordine}`;
-                            document.getElementById('modalOrderDetails').innerHTML = `<p><strong>Ricevuto il:</strong> ${new Date(data.details.data_ordine).toLocaleString('it-IT')}</p><p><strong>Ricevente:</strong> ${data.details.nome_ricevente} ${data.details.cognome_ricevente}</p><p><strong>Aula Consegna:</strong> ${data.details.aula_consegna || 'N/D'}</p><p><strong>Totale:</strong> ${parseFloat(data.details.totale).toFixed(2)} €</p><p><strong>Stato:</strong> ${data.details.stato}</p><p><strong>Note:</strong> ${data.details.note_utente || 'Nessuna nota'}</p>`;
+
+                            // --- INIZIO MODIFICA ---
+                            document.getElementById('modalOrderDetails').innerHTML = `
+                                <p><strong>Ricevuto il:</strong> ${new Date(data.details.data_ordine).toLocaleString('it-IT')}</p>
+                                <p><strong>Ricevente:</strong> ${data.details.nome_ricevente} ${data.details.cognome_ricevente}</p>
+                                <p><strong>Aula Consegna:</strong> ${data.details.aula_consegna || 'N/D'}</p>
+                                <p><strong>Fascia Oraria:</strong> ${data.details.fascia_oraria_consegna || 'N/D'}</p>
+                                <p><strong>Totale:</strong> ${parseFloat(data.details.totale).toFixed(2)} €</p>
+                                <p><strong>Stato:</strong> ${data.details.stato}</p>
+                                <p><strong>Note:</strong> ${data.details.note_utente || 'Nessuna nota'}</p>
+                            `;
+                            // --- FINE MODIFICA ---
+
                             const productList = document.getElementById('modalProductList');
                             productList.innerHTML = '';
                             if (data.products && Array.isArray(data.products)) {
                                 data.products.forEach(product => {
                                     const li = document.createElement('li');
                                     let productText = `${product.quantita} x ${product.nome} - ${parseFloat(product.prezzo_unitario_al_momento_ordine).toFixed(2)} €`;
-                                    if (product.ingredienti && product.ingredienti.length > 0) {
-                                        const ingredients = product.ingredienti.map(ing => ing.nome).join(', ');
-                                        productText += `<br><small class="product-ingredients">Ingredienti: ${ingredients}</small>`;
-                                    }
                                     li.innerHTML = productText;
                                     productList.appendChild(li);
                                 });
@@ -50,6 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const orderList = document.getElementById('order-list');
     if (orderList) {
+        const csrfToken = orderList.dataset.csrfToken;
+
         orderList.addEventListener('click', function (event) {
             if (event.target && event.target.classList.contains('update-status-btn')) {
                 const button = event.target;
@@ -73,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 statusBadge.textContent = data.new_status_display;
                                 statusBadge.className = 'status-badge status-' + data.new_status_display.replace(' ', '_');
                             }
+
                             if (data.next_step) {
                                 button.textContent = data.next_step.button_text;
                                 button.dataset.newStatus = data.next_step.next_status_data;

@@ -62,11 +62,11 @@ CREATE TABLE IF NOT EXISTS `Ordini` (
     `totale` DECIMAL(6,2) NOT NULL CHECK (totale >= 0),
     `stato` ENUM('ricevuto', 'in_preparazione', 'in_consegna', 'consegnato', 'annullato') NOT NULL DEFAULT 'ricevuto',
     `fascia_oraria_consegna` VARCHAR(50) NOT NULL,
-    `aula_consegna` VARCHAR(50), -- NULLABLE
+    `aula_consegna` VARCHAR(50), 
     `nome_ricevente` VARCHAR(100) NOT NULL,
     `cognome_ricevente` VARCHAR(100) NOT NULL,
-    `note_utente` TEXT, -- NULLABLE
-    `nascosto_al_venditore` BOOLEAN NOT NULL DEFAULT FALSE, -- Aggiunto nuovo campo
+    `note_utente` TEXT,
+    `nascosto_al_venditore` BOOLEAN NOT NULL DEFAULT FALSE, 
     FOREIGN KEY (`id_utente`) REFERENCES `Utenti`(`id_utente`)
 );
 
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `DettagliOrdine` (
     `id_dettaglio` INT AUTO_INCREMENT PRIMARY KEY,
     `id_ordine` INT NOT NULL,
     `id_prodotto` INT, 
-    `nome_personalizzato` VARCHAR(255), -- Aggiunto per i panini componibili
+    `nome_personalizzato` VARCHAR(255), 
     `tipo_panino_componibile` ENUM('normale', 'grande', 'maxi'), 
     `quantita` INT NOT NULL DEFAULT 1 CHECK (quantita >= 1),
     `prezzo_unitario_al_momento_ordine` DECIMAL(5,2) NOT NULL CHECK (prezzo_unitario_al_momento_ordine >= 0),
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `Notifiche` (
     'sconto_benvenuto', 
     'nuovo_ordine_venditore',
     'nuovo_utente') NOT NULL,
-    `id_ordine_riferimento` INT, -- NULLABLE
+    `id_ordine_riferimento` INT, 
     FOREIGN KEY (`id_utente_destinatario`) REFERENCES `Utenti`(`id_utente`),
     FOREIGN KEY (`id_ordine_riferimento`) REFERENCES `Ordini`(`id_ordine`)
 );

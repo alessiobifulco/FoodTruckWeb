@@ -121,5 +121,5 @@ include_once __DIR__ . '/../templates/header.php';
     </div>
 <?php endforeach; ?>
 
-<script src="js/admin_ingredients.js" defer></script>
+<script src="js/admin_menu.js" defer></script>
 <?php include_once __DIR__ . '/../templates/footer.php'; ?>

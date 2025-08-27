@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = Object.fromEntries(formData.entries());
             data.action = 'change_password';
 
-            fetch('/FOODTRACKWEB/public//manage_account.php', {
+            fetch('/FOODTRUCKWEB/public/manage_account.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -71,20 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     passwordMessage.className = result.success ? 'message success-message' : 'message error-message';
 
                     if (result.success) {
-                        changePasswordOverlay.style.display = 'none';
-                        passwordForm.reset();
-
-                        const mainPageMessage = document.getElementById('account-page-message');
-                        if (mainPageMessage) {
-                            mainPageMessage.textContent = result.message;
-                            mainPageMessage.className = 'message success-message';
-                            mainPageMessage.style.display = 'block';
-
-                            setTimeout(() => {
-                                mainPageMessage.textContent = '';
-                                mainPageMessage.style.display = 'none';
-                            }, 3000);
-                        }
+                        setTimeout(() => {
+                            changePasswordOverlay.style.display = 'none';
+                            passwordForm.reset();
+                        }, 2000);
                     }
                 });
         });
@@ -93,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (deleteAccountBtn) {
         deleteAccountBtn.addEventListener('click', () => {
             if (confirm("Sei sicuro di voler eliminare il tuo account? L'azione è irreversibile.")) {
-                fetch('/FOODTRACKWEB/public/manage_account.php', {
+                fetch('/FOODTRUCKWEB/public/manage_account.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'delete_account' })
@@ -108,6 +98,62 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     });
             }
+        });
+    }
+
+    const modal = document.getElementById('orderDetailsModalClient');
+    if (modal) {
+        const closeBtn = modal.querySelector('.close-btn');
+
+        const openModal = () => modal.style.display = 'flex';
+        const closeModal = () => modal.style.display = 'none';
+
+        closeBtn.addEventListener('click', closeModal);
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                closeModal();
+            }
+        });
+
+        document.querySelectorAll('.view-details-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.dataset.orderId;
+                fetch(`account.php?action=get_details&id=${orderId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.details) {
+                            document.getElementById('modalOrderIdClient').textContent = `#${String(data.details.id_ordine).padStart(5, '0')}`;
+
+                            document.getElementById('modalOrderDetailsClient').innerHTML = `
+                                <p><strong>Data Ordine:</strong> ${new Date(data.details.data_ordine).toLocaleString('it-IT')}</p>
+                                <p><strong>Fascia Consegna:</strong> ${data.details.fascia_oraria_consegna || 'N/D'}</p>
+                                <p><strong>Stato:</strong> ${data.details.stato.replace('_', ' ')}</p>
+                                <p><strong>Note:</strong> ${data.details.note_utente || 'Nessuna nota'}</p>
+                            `;
+
+                            const productList = document.getElementById('modalProductListClient');
+                            productList.innerHTML = '';
+                            data.products.forEach(product => {
+                                const li = document.createElement('li');
+                                li.textContent = `${product.quantita} x ${product.nome} - ${parseFloat(product.prezzo_unitario_al_momento_ordine).toFixed(2)} €`;
+                                productList.appendChild(li);
+                            });
+
+                            openModal();
+                        } else {
+                            alert('Dettagli dell\'ordine non trovati.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Errore nel recuperare i dettagli dell\'ordine:', error);
+                        alert('Si è verificato un errore. Riprova.');
+                    });
+            });
         });
     }
 });
