@@ -8,19 +8,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'venditore') {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_message'])) {
-    if (isset($_POST['id_messaggio'])) {
-        $id_messaggio = intval($_POST['id_messaggio']);
-        $stmt = $conn->prepare("DELETE FROM Messaggi WHERE id_messaggio = ?");
-        $stmt->bind_param("i", $id_messaggio);
-        $stmt->execute();
-        $stmt->close();
-        header("Location: admin_message.php");
-        exit();
-    }
-}
-
-$messaggi = $conn->query("SELECT * FROM Messaggi ORDER BY data_invio DESC")->fetch_all(MYSQLI_ASSOC);
+$query = "SELECT id_messaggio, nome_mittente, email_mittente, testo_messaggio, data_invio, letto FROM Messaggi ORDER BY data_invio DESC";
+$result = $conn->query($query);
+$messaggi = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 
 $page_title = "Messaggi Ricevuti";
 include_once __DIR__ . '/../templates/header.php';
@@ -38,7 +28,7 @@ include_once __DIR__ . '/../templates/header.php';
             <?php else: ?>
                 <?php foreach ($messaggi as $msg): ?>
                     <?php
-                        $is_read = isset($msg['letta']) && $msg['letta'];
+                        $is_read = array_key_exists('letto', $msg) && $msg['letto'];
                     ?>
                     <div class="message-item <?php echo !$is_read ? 'unread' : 'read'; ?>">
                         <div class="message-header">
