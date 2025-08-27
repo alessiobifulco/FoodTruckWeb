@@ -16,10 +16,14 @@ if (isset($_SESSION['admin_choice_required']) && $_SESSION['admin_choice_require
     unset($_SESSION['admin_choice_required']);
 }
 
+define("MAX_LOGIN_ATTEMPTS", 5);
+define("LOGIN_TIME_WINDOW_MINUTES", 30);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['login_submit'])) {
         $email = trim($_POST['email']);
         $password = $_POST['password'];
+
         if (empty($email) || empty($password)) {
             $error_message = 'Email e password sono obbligatorie.';
         } else {
@@ -28,23 +32,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
             $result = $stmt->get_result();
             $user = $result->fetch_assoc();
-            if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id_utente'];
-                $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_role'] = $user['ruolo'];
+            $stmt->close();
 
-                if ($user['ruolo'] === 'venditore') {
-                    $_SESSION['admin_choice_required'] = true;
-                    header('Location: login.php');
-                    exit;
+            if ($user) {
+                $user_id = $user['id_utente'];
+
+                $check_brute_stmt = $conn->prepare("SELECT COUNT(*) as num_attempts FROM login_attempts WHERE id_utente = ? AND orario_tentativo > (NOW() - INTERVAL ? MINUTE)");
+                $check_brute_stmt->bind_param("ii", $user_id, LOGIN_TIME_WINDOW_MINUTES);
+                $check_brute_stmt->execute();
+                $brute_result = $check_brute_stmt->get_result()->fetch_assoc();
+                $check_brute_stmt->close();
+
+                if ($brute_result['num_attempts'] >= MAX_LOGIN_ATTEMPTS) {
+                    $error_message = 'Account bloccato temporaneamente a causa di troppi tentativi di login falliti. Riprova più tardi.';
                 } else {
-                    header('Location: order.php');
-                    exit;
+                    if (password_verify($password, $user['password'])) {
+                        
+                        $clear_attempts_stmt = $conn->prepare("DELETE FROM login_attempts WHERE id_utente = ?");
+                        $clear_attempts_stmt->bind_param("i", $user_id);
+                        $clear_attempts_stmt->execute();
+                        $clear_attempts_stmt->close();
+
+                        session_regenerate_id(true);
+
+                        $_SESSION['user_id'] = $user['id_utente'];
+                        $_SESSION['user_email'] = $user['email'];
+                        $_SESSION['user_role'] = $user['ruolo'];
+
+                        if ($user['ruolo'] === 'venditore') {
+                            $_SESSION['admin_choice_required'] = true;
+                            header('Location: login.php');
+                            exit;
+                        } else {
+                            header('Location: order.php');
+                            exit;
+                        }
+                    } else {
+                        
+                        $insert_attempt_stmt = $conn->prepare("INSERT INTO login_attempts (id_utente) VALUES (?)");
+                        $insert_attempt_stmt->bind_param("i", $user_id);
+                        $insert_attempt_stmt->execute();
+                        $insert_attempt_stmt->close();
+
+                        $error_message = 'Credenziali non valide.';
+                    }
                 }
             } else {
                 $error_message = 'Credenziali non valide.';
             }
-            $stmt->close();
         }
     } elseif (isset($_POST['register_submit'])) {
         $form_to_display = 'register';
