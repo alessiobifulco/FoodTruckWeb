@@ -3,8 +3,7 @@ USE `FoodTruckDB`;
 -- Inserisce i nuovi utenti con password semplici e già criptate (hashate)
 INSERT INTO `Utenti` (`email`, `password`, `ruolo`, `attivo`, `primo_ordine_effettuato`) VALUES
 ('cliente1@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'cliente', TRUE, FALSE),
-('venditore@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'venditore', TRUE, FALSE),
-('prova@prova.it', '$2y$10$wI4p.h8v/2xG8h.Lg2f7a.Xg.S3h.9j.Zg.Yg.S3h.9j.Zg.Yg.S', 'cliente', TRUE, FALSE);
+('venditore@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'venditore', TRUE, FALSE);
 
 -- Popolamento Ingredienti
 INSERT INTO `Ingredienti` (`nome`, `categoria_ingrediente`, `disponibile`) VALUES
@@ -59,14 +58,13 @@ INSERT INTO `FasceOrarie` (`giorno_settimana`, `ora_inizio`, `ora_fine`, `attiva
 ('giovedi', '11:00:00', '11:30:00', TRUE, 10),('giovedi', '11:30:00', '12:00:00', TRUE, 10),('giovedi', '12:00:00', '12:30:00', TRUE, 10),('giovedi', '12:30:00', '13:00:00', TRUE, 10),
 ('venerdi', '11:00:00', '11:30:00', TRUE, 10),('venerdi', '11:30:00', '12:00:00', TRUE, 10),('venerdi', '12:00:00', '12:30:00', TRUE, 10),('venerdi', '12:30:00', '13:00:00', TRUE, 10),
 ('sabato', '11:00:00', '11:30:00', TRUE, 10),('sabato', '11:30:00', '12:00:00', TRUE, 10),('sabato', '12:00:00', '12:30:00', TRUE, 10),('sabato', '12:30:00', '13:00:00', TRUE, 10),
-
 ('domenica', '11:00:00', '11:30:00', TRUE, 10),('domenica', '11:30:00', '12:00:00', TRUE, 10),('domenica', '12:00:00', '12:30:00', TRUE, 10),('domenica', '12:30:00', '13:00:00', TRUE, 10);
 
 
 -- Popolamento Stato Fasce Giornaliere (Esempio per una data specifica)
 INSERT INTO `StatoFasceGiornaliere` (`id_fascia`, `data_riferimento`, `stato_giornaliero`, `numero_ordini_correnti`) VALUES
-(1, CURDATE(), 'disponibile', 3),
-(2, CURDATE(), 'piena', 10),
-(3, CURDATE(), 'disponibile', 5);
+(1, CURDATE(), 'disponibile', 0),
+(2, CURDATE(), 'disponibile', 0),
+(3, CURDATE(), 'disponibile', 0);
 
 

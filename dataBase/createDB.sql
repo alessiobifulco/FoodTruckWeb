@@ -12,6 +12,13 @@ CREATE TABLE IF NOT EXISTS `Utenti` (
   `primo_ordine_effettuato` BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+CREATE TABLE IF NOT EXISTS `login_attempts` (
+  `id_attempt` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_utente` INT NOT NULL,
+  `orario_tentativo` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`id_utente`) REFERENCES `Utenti`(`id_utente`) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS `Prodotti` (
     `id_prodotto` INT AUTO_INCREMENT PRIMARY KEY,
     `nome` VARCHAR(255) NOT NULL UNIQUE,
