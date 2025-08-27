@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         menuCartList.innerHTML = '';
         if (cart.length === 0) {
             menuCartList.innerHTML = '<li class="empty-cart-message">Il carrello è vuoto</li>';
+            summaryTotalPrice.textContent = '0,00 €'; // Aggiungiamo questa riga per resettare il totale
         } else {
             let totalPrice = 0;
             cart.forEach((item, index) => {
@@ -100,6 +101,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const closeOverlay = () => {
             overlay.style.display = 'none';
+            ingredientPicker.querySelectorAll('input').forEach(input => {
+                input.checked = false;
+                input.disabled = false;
+            });
         };
         const validateOverlaySelections = () => {
             const paneSelezionato = ingredientPicker.querySelector('input[name="pane"]:checked');
@@ -148,11 +153,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         ingredientPicker.addEventListener('change', (event) => {
             if (event.target.type === 'checkbox') {
-                const categoria = event.target.name;
+                const categoria = event.target.name.replace('[]', '');
                 const limite = limitiSelezione[categoria];
                 if (limite) {
-                    const checkedInputs = ingredientPicker.querySelectorAll(`input[name="${categoria}"]:checked`);
-                    const uncheckedInputs = ingredientPicker.querySelectorAll(`input[name="${categoria}"]:not(:checked)`);
+                    const checkedInputs = ingredientPicker.querySelectorAll(`input[name="${event.target.name}"]:checked`);
+                    const uncheckedInputs = ingredientPicker.querySelectorAll(`input[name="${event.target.name}"]:not(:checked)`);
+
                     if (checkedInputs.length >= limite) {
                         uncheckedInputs.forEach(input => input.disabled = true);
                     } else {
