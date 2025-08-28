@@ -4,7 +4,7 @@ define('DEBUG_MODE', true);
 
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
+define('DB_PASSWORD', 'BLS007ab&');
 define('DB_NAME', 'FoodTruckDB');
 
 error_reporting(E_ALL);

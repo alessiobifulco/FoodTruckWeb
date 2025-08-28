@@ -1,11 +1,9 @@
 USE `FoodTruckDB`;
 
--- Inserisce i nuovi utenti con password semplici e già criptate (hashate)
 INSERT INTO `Utenti` (`email`, `password`, `ruolo`, `attivo`, `primo_ordine_effettuato`) VALUES
 ('cliente1@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'cliente', TRUE, FALSE),
 ('venditore@campus.it', '$2y$10$xH0Ub78satAdYHuUdb3LT.WQhygBufcSn0u7CED1vEy2rD.kWG/zm', 'venditore', TRUE, FALSE);
 
--- Popolamento Ingredienti
 INSERT INTO `Ingredienti` (`nome`, `categoria_ingrediente`, `disponibile`) VALUES
 ('Pane Arabo', 'pane', TRUE),
 ('Ciabatta', 'pane', TRUE),
@@ -29,7 +27,6 @@ INSERT INTO `Ingredienti` (`nome`, `categoria_ingrediente`, `disponibile`) VALUE
 ('Salsa BBQ', 'salsa', TRUE),
 ('Philadelphia', 'salsa', TRUE);
 
--- Popolamento Prodotti
 INSERT INTO `Prodotti` (`nome`, `descrizione`, `prezzo`, `categoria`, `path_immagine`, `disponibile`) VALUES
 ('Panino con cotolettetta', 'pane arabo, cotoletta, insalata, maionese', 4.00, 'panino_predefinito', 'img/paninocotoletta.png', TRUE),
 ('Panino con cotto', 'pane ciabatta, cotto, fontina', 3.50, 'panino_predefinito', 'img/paninocotto.png', TRUE),
@@ -50,7 +47,6 @@ INSERT INTO `Prodotti` (`nome`, `descrizione`, `prezzo`, `categoria`, `path_imma
 ('Panino Grande (base)', '1 pane, 1 proteina, 2 contorni, 2 salse', 5.50, 'panino_componibile', 'img/paninocomponibile.png', TRUE),
 ('Panino Maxi (base)', '1 pane, 2 proteine, 3 contorni, 2 salse', 7.00, 'panino_componibile', 'img/paninocomponibile.png', TRUE);
 
--- Popolamento Fasce Orarie
 INSERT INTO `FasceOrarie` (`giorno_settimana`, `ora_inizio`, `ora_fine`, `attiva`, `capacita_massima`) VALUES
 ('lunedi', '11:00:00', '11:30:00', TRUE, 10),('lunedi', '11:30:00', '12:00:00', TRUE, 10),('lunedi', '12:00:00', '12:30:00', TRUE, 10),('lunedi', '12:30:00', '13:00:00', TRUE, 10),('lunedi', '13:00:00', '13:30:00', TRUE, 10),('lunedi', '13:30:00', '14:00:00', TRUE, 10),('lunedi', '14:00:00', '14:30:00', TRUE, 10),
 ('martedi', '11:00:00', '11:30:00', TRUE, 10),('martedi', '11:30:00', '12:00:00', TRUE, 10),('martedi', '12:00:00', '12:30:00', TRUE, 10),('martedi', '12:30:00', '13:00:00', TRUE, 10),
@@ -61,7 +57,6 @@ INSERT INTO `FasceOrarie` (`giorno_settimana`, `ora_inizio`, `ora_fine`, `attiva
 ('domenica', '11:00:00', '11:30:00', TRUE, 10),('domenica', '11:30:00', '12:00:00', TRUE, 10),('domenica', '12:00:00', '12:30:00', TRUE, 10),('domenica', '12:30:00', '13:00:00', TRUE, 10);
 
 
--- Popolamento Stato Fasce Giornaliere (Esempio per una data specifica)
 INSERT INTO `StatoFasceGiornaliere` (`id_fascia`, `data_riferimento`, `stato_giornaliero`, `numero_ordini_correnti`) VALUES
 (1, CURDATE(), 'disponibile', 0),
 (2, CURDATE(), 'disponibile', 0),

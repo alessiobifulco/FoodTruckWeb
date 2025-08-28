@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/db.php';
 $page_title = "Termini e Condizioni";
 include_once __DIR__ . '/../templates/header.php';
