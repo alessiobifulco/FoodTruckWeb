@@ -1,63 +1,40 @@
 # Project Setup: FoodTruckWeb
 
-Questa guida fornisce le istruzioni passo-passo per configurare e avviare il progetto FoodTruckWeb in un ambiente di sviluppo locale su Windows.
+Questa guida fornisce le istruzioni passo-passo per configurare e avviare il progetto FoodTruckWeb in un ambiente di sviluppo locale.
 
-## 1. Prerequisiti
+## 1. Requisiti
 
-Assicurati di avere il seguente software installato e configurato sul tuo sistema.
+Prima di iniziare, assicurati di avere installato sul tuo sistema:
 
-### a) Ambiente Server XAMPP
-Il progetto è testato su **XAMPP**, che include Apache (web server) e MySQL (database).
-- **Download:** Scarica XAMPP.
-- **Installazione:** Segui la procedura guidata. L'installazione di default in `C:\xampp` è consigliata.
+* Un ambiente di sviluppo web locale come **XAMPP**, che include Apache (web server), PHP e MariaDB (database).
+    * **Download:** [apachefriends.org](https://www.apachefriends.org/index.html)
 
-### b) Composer (per Windows)
-**Composer** è essenziale per installare le dipendenze del progetto e creare la cartella `vendor/`.
-1.  **Download:** Vai sul sito ufficiale di Composer: [getcomposer.org](https://getcomposer.org/download/).
-2.  **Installer:** Scarica l'eseguibile `Composer-Setup.exe`.
-3.  **Verifica:** Una volta completata l'installazione, apri un **nuovo** terminale (CMD, PowerShell o Git Bash) e digita il comando `composer --version`. Se l'installazione è andata a buon fine, vedrai la versione di Composer installata.
-
-## 2. Configurazione del Progetto
+## 2. Installazione e Configurazione
 
 Segui questi passaggi nell'ordine indicato.
 
 ### Step 1: Scarica il Progetto
-Clona il repository da GitHub nella cartella `htdocs` di XAMPP.
+Clona o scarica il repository del progetto e posizionalo all'interno della cartella `htdocs` della tua installazione di XAMPP (solitamente `C:\xampp\htdocs`).
 
+Se usi Git, apri un terminale in `C:\xampp\htdocs` e lancia:
 ```bash
-# Apri un terminale in C:\xampp\htdocs
-cd C:\xampp\htdocs
-
-# Clona il repository (sostituisci con il tuo URL)
+# Sostituisci con l'URL del tuo repository
 git clone [https://github.com/tuo-username/FoodTruckWeb.git](https://github.com/tuo-username/FoodTruckWeb.git)
-
-# Entra nella cartella del progetto
-cd FoodTruckWeb
 ```
 
-### Step 2: Installa le Dipendenze PHP
-
-```bash
-composer install
-```
-Questo comando leggerà il file `composer.json` e creerà la cartella `vendor/` con tutte le librerie necessarie.
-
-### Step 3: Crea e Popola il Database
+### Step 2: Imposta il Database
 1.  Avvia i moduli **Apache** e **MySQL** dal pannello di controllo di XAMPP.
 2.  Apri il browser e vai a `http://localhost/phpmyadmin/`.
-3.  Crea un nuovo database:
-    - Clicca su "Nuovo" nel menu a sinistra.
-    - Inserisci il nome del database: `FoodTruckDB`.
-    - Clicca su "Crea".
-4.  Importa la struttura e i dati:
-    - Clicca sul database `FoodTruckDB` appena creato nel menu a sinistra.
-    - Vai alla scheda "**Importa**" in alto.
-    - Clicca su "Scegli file" e seleziona lo script SQL fornito con il progetto (`database/createtable.sql e database/populatetable.sql`).
-    - Clicca sul pulsante "Esegui" in fondo alla pagina.
+3.  Crea un nuovo database vuoto chiamato `FoodTruckDB`.
+4.  Seleziona il database `FoodTruckDB` appena creato nel menu a sinistra.
+5.  Vai alla scheda "**Importa**" in alto.
+6.  Importa gli script SQL forniti nella cartella `database/`:
+    * Per prima cosa, importa il file `createtable.sql` per creare la struttura di tutte le tabelle.
+    * Subito dopo, importa il file `populatetable.sql` per inserire i dati iniziali (prodotti, utenti, ecc.).
 
-### Step 4: Configura la Connessione al Database
+### Step 3: Configura la Connessione al Database
 1.  Apri il file `config/db.php` con un editor di codice.
-2.  Verifica che le credenziali corrispondano al tuo ambiente XAMPP. La configurazione di default di XAMPP di solito ha `root` come utente e nessuna password.
+2.  Verifica che le credenziali corrispondano al tuo ambiente XAMPP. La configurazione di default di solito ha `root` come utente e nessuna password.
 
     ```php
     define('DB_SERVER', 'localhost');
