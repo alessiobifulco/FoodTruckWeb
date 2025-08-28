@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         menuCartList.innerHTML = '';
         if (cart.length === 0) {
             menuCartList.innerHTML = '<li class="empty-cart-message">Il carrello è vuoto</li>';
-            summaryTotalPrice.textContent = '0,00 €'; // Aggiungiamo questa riga per resettare il totale
+            summaryTotalPrice.textContent = '0,00 €'; 
         } else {
             let totalPrice = 0;
             cart.forEach((item, index) => {

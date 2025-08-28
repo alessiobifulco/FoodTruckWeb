@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (data && data.details) {
                             document.getElementById('modalOrderId').textContent = `#${data.details.id_ordine}`;
 
-                            // --- INIZIO MODIFICA ---
                             document.getElementById('modalOrderDetails').innerHTML = `
                                 <p><strong>Ricevuto il:</strong> ${new Date(data.details.data_ordine).toLocaleString('it-IT')}</p>
                                 <p><strong>Ricevente:</strong> ${data.details.nome_ricevente} ${data.details.cognome_ricevente}</p>
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <p><strong>Stato:</strong> ${data.details.stato}</p>
                                 <p><strong>Note:</strong> ${data.details.note_utente || 'Nessuna nota'}</p>
                             `;
-                            // --- FINE MODIFICA ---
 
                             const productList = document.getElementById('modalProductList');
                             productList.innerHTML = '';
