@@ -6,10 +6,11 @@ include_once __DIR__ . '/../templates/header.php';
 <div class="auth-container">
     <div class="auth-card">
         <div class="auth-form-container" style="text-align: center;">
-            <h2 class="form-title">Controllo Completato</h2>
-            <p style="margin-bottom: 25px; color: #666;">Se un account con l'email fornita esiste, sono state inviate le istruzioni per il recupero.</p>
-            <div class="message success-message" style="display: block;">Invio riuscito!</div>
-            <a href="login.php" class="btn-submit" style="display: inline-block; text-decoration: none; margin-top: 20px;">Torna al Login</a>
+            <h2 class="form-title">Istruzioni Inviate</h2>
+            <p style="margin-bottom: 25px; color: #666;">Se un account con l'email fornita esiste, riceverai una notifica sul sito con le istruzioni.</p>
+            <div class="message success-message" style="display: block;">Operazione completata!</div>
+
+            <a href="login.php" class="btn-submit">Torna al Login</a>
         </div>
     </div>
 </div>
